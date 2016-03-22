@@ -43,7 +43,7 @@ routes = {
         throw err;
       }
       var pets = JSON.parse(data);
-      res.end('No.');
+      res.end('Not found. Go away.');
     });
   },
   '/pets/-1': function(req, res){
@@ -54,7 +54,7 @@ routes = {
         throw err;
       }
       var pets = JSON.parse(data);
-      res.end('No.');
+      res.end('Not found. Go away.');
     });
   },
 }
