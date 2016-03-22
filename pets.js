@@ -7,10 +7,7 @@ var petsPath = path.join(__dirname, 'pets.json');
 var node = path.basename(process.argv[0]);
 var file = path.basename(process.argv[1]);
 var cmd = process.argv[2];
-var index = process.argv[3];
-var age = process.argv[4];
-var kind = process.argv[5];
-var name = process.argv[6];
+
 
 if (cmd === 'read'){
   fs.readFile(petsPath, 'utf8', function(err, data){
@@ -19,8 +16,8 @@ if (cmd === 'read'){
     }
 
     var pets = JSON.parse(data);
-
-    if (index <= pets.length){
+    var index = process.argv[3];
+    if (index < pets.length){
       console.log(pets[index]);
     }
     else {
@@ -35,15 +32,18 @@ else if (cmd === 'create'){
       throw readErr;
     }
 
-    var pets = JSON.parse(data);
-    var pet = process.argv[3];
+    var age = process.argv[3];
+    var kind = process.argv[4];
+    var name = process.argv[5];
 
-    if (!pet) {
-      console.error(`Usage: ${node} ${file} ${cmd} PET`);
+    var pets = JSON.parse(data);
+
+    if (!age || !kind || !name) {
+      console.log(`Usage: ${node} ${file} ${cmd} AGE KIND NAME`);
       process.exit(1);
     }
 
-    pets.push(pet);
+    pets.push({age:age, kind:kind, name:name});
 
     var petsJSON = JSON.stringify(pets);
 
@@ -52,7 +52,8 @@ else if (cmd === 'create'){
         throw writeErr;
       }
 
-      console.log(pet);
+      console.log(`Usage: ${node} ${file} ${cmd} ${age} ${kind} ${name}`);
+      process.exit(1);
     });
   });
 }
