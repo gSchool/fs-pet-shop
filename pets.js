@@ -14,13 +14,12 @@ if (cmd === 'read'){
     if (err){
       throw err;
     }
-
     var pets = JSON.parse(data);
     var index = process.argv[3];
-    if (index < pets.length){
+    else if (index < pets.length){
       console.log(pets[index]);
     }
-    else {
+    else if{
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
       process.exit(1);
     }
