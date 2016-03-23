@@ -35,6 +35,6 @@ var handleRequest = function (req, res){
 
 const port = process.env.PORT || 5000;
 var server = http.createServer(handleRequest);
-server.listen(5000, function(){
+server.listen(port, () =>{
   console.log('Listening...')
 })
