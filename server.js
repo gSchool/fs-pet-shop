@@ -33,8 +33,8 @@ var handleRequest = function (req, res){
   });
 }
 
+const port = process.env.PORT || 5000;
 var server = http.createServer(handleRequest);
-
-server.listen(8080, function(){
+server.listen(5000, function(){
   console.log('Listening...')
 })
