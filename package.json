@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "This is a multi-day assignment split into the following parts. Your task is to complete each part's assignment, one at a time, before moving on to the next part.",
   "main": ".eslintrc.js",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.13.4"
+  },
   "devDependencies": {
     "eslint": "^2.4.0",
     "eslint-config-ryansobol": "^7.1.0"
