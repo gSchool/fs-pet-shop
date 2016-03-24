@@ -7,23 +7,27 @@ var petsPath = path.join(__dirname, 'pets.json');
 
 app.set('view engine', 'ejs');
 
+app.get('/pets', function (req, res){
+  fs.readFile(petsPath, 'utf8', function(err, data) {
+    var pets = JSON.parse(data);
+    res.send(JSON.stringify(pets));
+  })
+})
+
 app.get('/pets/:index', function (req, res){
-  var index = req.params.index;
+  var index = Number.parseInt(req.params.index);
 
   fs.readFile(petsPath, 'utf8', function(err, data) {
     var pets = JSON.parse(data);
-    if (index < pets.length){
+    if (index < pets.length) {
       res.send(JSON.stringify(pets[index]))
     }
-    else if (index === '5')(
-      res.send(JSON.stringify(pets))
-    )
   })
 });
 
-// app.get('*', function (req, res) {
-//   res.status(404).send('Nope! Nothing here.');
-// });
+app.get('*', function (req, res) {
+  res.status(404).send('Nope! Nothing here.');
+});
 
 app.listen(5000, function() {
   console.log('Listening...');
