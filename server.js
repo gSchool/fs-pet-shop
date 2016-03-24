@@ -7,6 +7,7 @@ function handleRequest(req, res) {
   if(routes[req.url]){
     routes[req.url](req, res);
   } else {
+    res.statusCode = 404;
     res.end("404, no such route")
   }
 };

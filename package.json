@@ -2,7 +2,7 @@
   "name": "fs-pet-shop",
   "version": "1.0.0",
   "description": "This is a multi-day assignment split into the following parts. Your task is to complete each part's assignment, one at a time, before moving on to the next part.",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/vMarkham/fs-pet-shop/issues"
   },
-  "homepage": "https://github.com/vMarkham/fs-pet-shop#readme"
+  "homepage": "https://github.com/vMarkham/fs-pet-shop#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4"
+  }
 }

@@ -5,7 +5,7 @@ var petsPath = path.join(__dirname, 'pets.json');
 routes = {
   '/pets': function(req, res){
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode("200")
+    res.statusCode = 200;
     fs.readFile(petsPath, 'utf8', function(err, data){
       if (err) {
         throw err;
@@ -15,7 +15,7 @@ routes = {
   },
   '/pets/0': function(req, res){
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode("200")
+    res.statusCode = 200;
     fs.readFile(petsPath, 'utf8', function(err, data){
       if (err) {
         throw err;
@@ -26,7 +26,7 @@ routes = {
   },
   '/pets/1': function(req, res){
     res.setHeader('Content-Type', 'application/json');
-    res.statusCode("200")
+    res.statusCode = 200;
     fs.readFile(petsPath, 'utf8', function(err, data){
       if (err) {
         throw err;
@@ -37,7 +37,7 @@ routes = {
   },
   '/pets/2': function(req, res){
     res.setHeader('Content-Type', 'text/plain');
-    res.statusCode("404")
+    res.statusCode = 404;
     fs.readFile(petsPath, 'utf8', function(err, data){
       if (err) {
         throw err;
@@ -48,7 +48,7 @@ routes = {
   },
   '/pets/-1': function(req, res){
     res.setHeader('Content-Type', 'text/plain');
-    res.statusCode("404")
+    res.statusCode = 404;
     fs.readFile(petsPath, 'utf8', function(err, data){
       if (err) {
         throw err;
