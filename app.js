@@ -12,10 +12,10 @@ const petsPath = path.join(__dirname, 'pets.json');
 app.use(morgan('short'));
 app.use(bodyParser.json());
 
-app.get('/pets/:idx', (req, res) => {
+app.get('/pets/:idx', (req, res, next) => {
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) {
-      throw err;
+      return next(err);
     }
     const pets = JSON.parse(data);
 
@@ -32,10 +32,10 @@ app.get('/pets/:idx', (req, res) => {
     }
   });
 });
-app.get('/pets', (req, res) => {
+app.get('/pets', (req, res, next) => {
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) {
-      throw err;
+      return next(err);
     }
     const pets = JSON.parse(data);
 
@@ -47,7 +47,7 @@ app.get('/*', (req, res) => {
   res.statusCode = 404;
   res.send('404 not found');
 });
-app.post('/pets', (req, res) => {
+app.post('/pets', (req, res, next) => {
   const body = req.body;
 
   const age = body.age;
@@ -56,7 +56,7 @@ app.post('/pets', (req, res) => {
 
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) {
-      throw err;
+      return next(err);
     }
     if (!age || !kind || !name || isNaN(parseInt(age)) || parseInt(age) < 0) {
       res.send('404 bad query');
@@ -74,14 +74,14 @@ app.post('/pets', (req, res) => {
 
       fs.writeFile(petsPath, petsJSON, (writeErr) => {
         if (writeErr) {
-          throw writeErr;
+          return next(writeErr);
         }
         res.send(newPet);
       });
     }
   });
 });
-app.put('/pets/:idx', (req, res) => {
+app.put('/pets/:idx', (req, res, next) => {
   const index = Number.parseInt(req.params.idx);
   const body = req.body;
   const age = parseInt(body.age);
@@ -90,7 +90,7 @@ app.put('/pets/:idx', (req, res) => {
 
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) {
-      throw err;
+      return next(err);
     }
     const pets = JSON.parse(data);
 
@@ -106,18 +106,18 @@ app.put('/pets/:idx', (req, res) => {
 
     fs.writeFile(petsPath, petsJSON, (writeErr) => {
       if (writeErr) {
-        throw writeErr;
+        return next(writeErr);
       }
       res.send(newPet);
     });
   });
 });
-app.delete('/pets/:idx', (req, res) => {
+app.delete('/pets/:idx', (req, res, next) => {
   const index = Number.parseInt(req.params.idx);
 
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) {
-      throw err;
+      return next(err);
     }
     const pets = JSON.parse(data);
 
@@ -129,14 +129,14 @@ app.delete('/pets/:idx', (req, res) => {
 
     fs.writeFile(petsPath, petsJSON, (writeErr) => {
       if (writeErr) {
-        throw writeErr;
+        return next(writeErr);
       }
       res.send(pet);
     });
   });
 });
 
-app.patch('/pets/:idx', (req, res) => {
+app.patch('/pets/:idx', (req, res, next) => {
   const index = parseInt(req.params.idx);
   const body = req.body;
   const age = body.age;
@@ -145,7 +145,7 @@ app.patch('/pets/:idx', (req, res) => {
 
   fs.readFile(petsPath, 'utf8', (err, data) => {
     if (err) {
-      throw err;
+      return next(err);
     }
     const pets = JSON.parse(data);
 
@@ -171,11 +171,16 @@ app.patch('/pets/:idx', (req, res) => {
 
     fs.writeFile(petsPath, petsJSON, (writeErr) => {
       if (writeErr) {
-        throw writeErr;
+        return next(writeErr);
       }
       res.send(newPet);
     });
   });
+});
+
+app.use(function(err, req, res, next) {
+  console.error(err, stack);
+  return res.send(500, {message: err.message});
 });
 
 app.listen(3000, () => {
