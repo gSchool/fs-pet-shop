@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 app.get('/err', (req, res, next) => {
   return next(new Error());
-})
+});
 
 app.get('/pets/:idx', (req, res, next) => {
   fs.readFile(petsPath, 'utf8', (err, data) => {
