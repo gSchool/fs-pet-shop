@@ -1,45 +1,67 @@
-'use strict';
+var express = require('express');
+var app = express();
 
-const http = require('http');
+var fs = require('fs');
+var path = require('path');
+var petsPath = path.join(__dirname, 'pets.json');
 
-const fs = require('fs');
-const path = require('path');
-const petsPath = path.join(__dirname, 'pets.json');
+var pets;
 
+fs.readFile(petsPath, 'utf-8', function(err, data) {
+  pets = JSON.parse(data);
+});
 
-const handleRequest = function(req, res) {
-  fs.readFile(petsPath, 'utf8', function(err, data) {
-    const pets = JSON.parse(data);
+app.set('view engine', 'ejs');
 
-    if (err) {
-      throw err;
-    }
-    else if (req.url === '/pets') {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(pets));
-    }
-    else if (req.url === '/pets/0') {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(pets[0]));
-    }
-    else if (req.url === '/pets/1') {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(pets[1]));
-    }
-    else if (req.url === '/pets/2' || req.url === '/pets/-1') {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('Not Found');
-    }
-    else {
-      res.end(404);
-    }
+app.disable('x-powered-by');
+app.set('port', process.env.PORT || 5000);
+
+var morgan = require('morgan');
+app.use(morgan('short'));
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+app.get('/pets', function (req, res){
+    res.send(pets);
   });
-};
 
-const port = process.env.PORT || 5000;
+app.get('/pets/:index', function (req, res){
+  var index = Number.parseInt(req.params.index);
 
-const server = http.createServer(handleRequest);
+  if (Number.isNan(index) || index < 0 || index >= pets.length) {
+    return res.sendStatus(404);
+  }
 
-server.listen(port, () => {
+  res.send(pets[index]);
+});
+
+app.post('/pets', function(req, res) {
+  const pet = req.body;
+
+  pets.push(pet);
+  console.log(pet + 'this is pet');
+  res.send(pet);
+
+  fs.writeFile(petsPath, JSON.stringify(pets));
+});
+
+app.put('/pets/:index', function(req, res) {
+  const index = Number.parseInt(req.params.index);
+
+  const pet = req.body;
+
+  if (!pet) {
+    return res.sendStatus(400);
+  }
+
+  pets[index]= pet;
+
+  res.send(pet);
+
+  fs.writeFile(petsPath, JSON.stringify(pets));
+});
+
+app.listen(5000, function() {
   console.log('Listening...');
 });

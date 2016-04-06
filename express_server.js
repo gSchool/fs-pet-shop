@@ -33,7 +33,7 @@ app.post('/pets', function(req, res) {
   pets.push(pet);
   res.send(pet);
 
-  // fs.writeFile(petsPath, JSON.stringify(pets));
+  fs.writeFile(petsPath, JSON.stringify(pets));
 });
 
 
