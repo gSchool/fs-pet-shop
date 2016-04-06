@@ -5,7 +5,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const petsPath = path.join(__dirname, 'pets.json');
-const petRegExp = /^\/pets\/(.*)$/;
+
 
 const handleRequest = function(req, res) {
   fs.readFile(petsPath, 'utf8', function(err, data) {
