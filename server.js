@@ -39,6 +39,10 @@ app.get('/pets/:index', function (req, res){
 app.post('/pets', function(req, res) {
   const pet = req.body;
 
+  if(!pet) {
+    return res.sendStatus(400);
+  }
+
   pets.push(pet);
   console.log(pet + 'this is pet');
   res.send(pet);
@@ -56,6 +60,16 @@ app.put('/pets/:index', function(req, res) {
   }
 
   pets[index]= pet;
+
+  res.send(pet);
+
+  fs.writeFile(petsPath, JSON.stringify(pets));
+});
+
+app.delete('/pets/:index', function(req, res) {
+  var index = Number.parseInt(req.params.index);
+
+  var pet = pets.splice(index, 1)[0];
 
   res.send(pet);
 
