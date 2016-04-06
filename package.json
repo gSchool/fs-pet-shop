@@ -1,0 +1,27 @@
+{
+  "name": "fs-pet-shop",
+  "version": "1.0.0",
+  "description": "This is a multi-day assignment split into the following parts. Your task is to complete each part's assignment, one at a time, before moving on to the next part.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {
+    "eslint": "^2.4.0",
+    "eslint-config-ryansobol": "^7.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/austinsprague/fs-pet-shop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/austinsprague/fs-pet-shop/issues"
+  },
+  "homepage": "https://github.com/austinsprague/fs-pet-shop#readme"
+}

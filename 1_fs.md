@@ -8,7 +8,7 @@ The subcommands will be in the form of create, read, update, and destroy (CRUD).
 
 ## Getting started
 
-After you've fork and clone this repository to your development environment, change into the project directory.
+After you've fork and cl~one this repository to your development environment, change into the project directory.
 
 ```shell
 cd path/to/project
