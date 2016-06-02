@@ -13,7 +13,7 @@ if ( subCommand === "read" ) {
 	fs.readFile( file, "utf8", function( err, data ) {
 
 		var pets = JSON.parse( data );
-		if ( !petIndex || !pet[ petIndex ] ) {
+		if ( !petIndex || !pets[ petIndex ] ) {
 
 			console.log( data );
 		} else {
@@ -36,6 +36,7 @@ if ( subCommand === "read" ) {
 		fs.readFile( file, "utf8", function( err, data ) {
 			var parseFile = JSON.parse( data );
 			parseFile.push( pet );
+
 			fs.writeFile( file, JSON.stringify( parseFile ), function( err ) {
 
 			} );
