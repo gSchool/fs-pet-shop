@@ -34,11 +34,11 @@ Your next task is to add routes to handle the create, update, and destroy HTTP c
 | Request Method | Request URL | Request Body                                            | Response Status | Response Content-Type | Response Body                                           |
 |----------------|-------------|---------------------------------------------------------|-----------------|-----------------------|---------------------------------------------------------|
 | `POST`         | `/pets`     | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` | `200`           | `application/json`    | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` |
-| `GET`          | `/pets/3`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` |
-| `PUT`          | `/pets/3`   | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      | `200`           | `application/json`    | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      |
-| `GET`          | `/pets/3`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      |
-| `DELETE`       | `/pets/3`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      |
-| `GET`          | `/pets/3`   | N/A                                                     | `404`           | `text/plain`          | `Not Found`                                             |
+| `GET`          | `/pets/2`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Cornflake", "age": 3, "kind": "parakeet" }` |
+| `PUT`          | `/pets/2`   | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      | `200`           | `application/json`    | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      |
+| `GET`          | `/pets/2`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      |
+| `DELETE`       | `/pets/2`   | N/A                                                     | `200`           | `application/json`    | `{ "name": "Scooter", "age": 4, "kind": "puppy" }`      |
+| `GET`          | `/pets/2`   | N/A                                                     | `404`           | `text/plain`          | `Not Found`                                             |
 | `GET`          | `/`         | N/A                                                     | `404`           | `text/plain`          | `Not found`                                             |
 | `GET`          | `/blah`     | N/A                                                     | `404`           | `text/plain`          | `Not found`                                             |
 
@@ -109,8 +109,8 @@ Add a route to handle the `PATCH` HTTP request method. The `PATCH` method issues
 
 | Request Method | Request URL | Request Body         | Response Status | Response Content-Type | Response Body                                   |
 |----------------|-------------|----------------------|-----------------|-----------------------|-------------------------------------------------|
-| `PATCH`        | `/pets/3`   | `{ "name": "Fido" }` | `200`           | `application/json`    | `{ "name": "Fido", "age": 4, "kind": "puppy" }` |
-| `GET`          | `/pets/3`   | N/A                  | `200`           | `application/json`    | `{ "name": "Fido", "age": 4, "kind": "puppy" }` |
+| `PATCH`        | `/pets/2`   | `{ "name": "Fido" }` | `200`           | `application/json`    | `{ "name": "Fido", "age": 4, "kind": "puppy" }` |
+| `GET`          | `/pets/2`   | N/A                  | `200`           | `application/json`    | `{ "name": "Fido", "age": 4, "kind": "puppy" }` |
 
 The route handler must only update the record if `age` is an integer, if `kind` is not missing, or if `name` is not missing.
 
