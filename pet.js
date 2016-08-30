@@ -5,7 +5,6 @@ var age = input[3];
 var kind = input[4];
 var name = input[5];
 
-
 //reading in pets.json
 fs.readFile('pets.json', 'utf8', function (err, data) {
   //JSON.parse changes from a string into array (javascript readable)
