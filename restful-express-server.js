@@ -6,28 +6,58 @@ var fs = require('fs');
 app.use(require('morgan')('tiny'));
 app.use(require('body-parser').json());
 
-app.post('/pets', function(req, res) {
-    var newPet = req.body;
+
+app.get('/pets', (req, res, next) => {
+  res.status(200).send(pets);
+});
+
+app.get('/pets/:index', (req, res, next) => {
+  let index = parseInt(req.params.index)
+  if (pets.length < index  || index < 0) {
+    res.status(404).send('Not Found');
+  } else {
+    res.status(200).send(pets[index]);
+  }
+});
+
+app.post('/pets', (req, res) => {
+  let newPet = req.body;
+  if (!newPet.age || !newPet.kind || !newPet.name) {
+    res.status(404).send({
+      message: 'Bad Request'
+    })
+  } else {
     pets.push(newPet);
-    // var newPet = {
-    //   age: parseInt(age),
-    //   kind: kind,
-    //   name: name
-    // }
-    //data.push(newPet);
-    var petData = JSON.stringify(pets);
-    fs.writeFile('./pets.json', petData, function(err) {
-      if (err) {
-        console.log('Write Gooder');
-      } else {
-        res.status(201).send(req.body);
-      }
-    });
+    res.status(200).send(newPet);
+  }
 });
 
-
-
-
-app.listen(3000, function() {
-  console.log('hi');
+app.put('/pets/:index' , (req, res, next) => {
+  let index = parseInt(req.params.index)
+  if (pets.length < index || index < 0) {
+    res.status(404).send({
+      message: 'Index does not match our records.'
+    })
+  }
+  let newPet = req.body
+  if (!newPet.age || !newPet.kind || !newPet.name) {
+    res.status(404).send({
+      message: 'Bad Request'
+    })
+  }
+  pets[index] = newPet;
+  res.status(200).send(newPet);
 });
+
+app.delete('/pets/:index', (req,res, next) => {
+  let index = parseInt(req.params.index);
+  if (pets.length < index || index < 0) {
+    res.status(404).send({
+      message: 'Index does not match our records.'
+    })
+  }
+  var petDel = pets.splice(index, 1);
+  res.status(200).send(petDel)
+});
+
+app.listen(3000);
