@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <link rel="stylesheet" href="../style.css" media="screen" title="no title">
+
+    </head>
+
+    <body>
+
+        <h1 class="title">Show me yo pets</h1>
+
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Info Page</th>
+            </thead>
+            <tbody>
+                <% pets.forEach(function(pet, index){ %>
+                    <tr>
+                        <td>
+                            <%= index%>
+                        </td>
+                        <td>
+                            <%= pet.name%>
+                        </td>
+                        <td>
+                            <%= pet.description%>
+                        </td>
+                        <td>
+                            <a href="/pets/<%= index%>">Show Me</a>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+
+        <div class="links">
+
+            <a href="/pets/new">Add new pet?</a>
+        </div>
+    </body>
+
+</html>
