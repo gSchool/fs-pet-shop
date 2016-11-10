@@ -22,15 +22,23 @@ if(cmd ==='read'){
     }
 
     var pets = JSON.parse(data);
- //pets=typeof=array
-    var index;
-    for(var i = 0; i < pets.length; i++){
-      if(petIndex === i){
-        console.log(pets[i]);
-      }else{
-        console.log('pet not found');
-      }
+    var numPets = pets.length;
+
+    if(petIndex>=0 && petIndex<numPets){
+      console.log(pets[petIndex]);
+    }else if(petIndex <0 || petIndex >numPets){
+      console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
+      process.exit(1);
+    }else{
+      console.log(pets);
     }
+
+
+    // for(var i = 0; i < pets.length; i++){
+    //   if(petIndex === i){
+    //     console.log(pets[i]);
+    //   }
+    // }
     // console.log(pets);
   });
 }
