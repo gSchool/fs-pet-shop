@@ -12,10 +12,10 @@ var petPath = path.join(__dirname, 'pets.json');
 var node = path.basename(process.argv[0]);
 var file = path.basename(process.argv[1]);
 var cmd = process.argv[2];
-var petIndex = parseInt(process.argv[3]);
 
 //reads entire path/err first //data=pet info
 if(cmd ==='read'){
+  var petIndex = parseInt(process.argv[3]);
   fs.readFile(petPath, 'utf8', function(err, data) {
     if (err) {
       throw err;
@@ -32,18 +32,44 @@ if(cmd ==='read'){
     }else{
       console.log(pets);
     }
-
-
-    // for(var i = 0; i < pets.length; i++){
-    //   if(petIndex === i){
-    //     console.log(pets[i]);
-    //   }
-    // }
-    // console.log(pets);
   });
 }
-else if(cmd === 'create'){
-  console.log('create');
+else if (cmd === 'create') {
+  fs.readFile(petPath, 'utf8', function(readErr, data) {
+    if (readErr) {
+      throw readErr;
+    }
+
+    //declare argv's
+    var pets = JSON.parse(data);
+    var pAge = parseInt(process.argv[3]);
+    var pKind = process.argv[4];
+    var pName = process.argv[5];
+
+//if has age, kind, and name, create object to push into array
+    if(pAge && pKind && pName){
+      var newPet = {};
+      newPet.age = pAge;
+      newPet.kind = pKind;
+      newPet.name = pName;
+
+      pets.push(newPet);
+
+      var petJSON = JSON.stringify(pets);
+
+      fs.writeFile(petPath, petJSON, function(writeErr){
+        if(writeErr){
+          throw writeErr;
+        }
+      });
+
+    }else{
+      console.error(`Usage: ${node} ${file} ${cmd} AGE KIND NAME`);
+      process.exit(1);
+    }
+
+    console.log(pets);
+  });
 }
 else if(cmd === 'update'){
   console.log('update');
@@ -56,12 +82,9 @@ else{
   console.error(`Usage: ${node} ${file} [ read | create | update | destroy ]`);
   process.exit(1);
 }
-// var pets = JSON.parse(data); //pets=typeof=array
 // for(var i = 0; i < pets.length; i++){
-//   if(pets[i].name === petName){
-//     console.log(pets[i], 'pet found');
-//   }else{
-//     console.log('pet not found');
+//   if(petIndex === i){
+//     console.log(pets[i]);
 //   }
 // }
 // console.log(pets);
