@@ -26,12 +26,22 @@ if(cmd ==='read'){
 
     if(petIndex>=0 && petIndex<numPets){
       console.log(pets[petIndex]);
-    }else if(petIndex <0 || petIndex >numPets){
+    }else if(petIndex <0 || petIndex >=numPets){
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
       process.exit(1);
     }else{
       console.log(pets);
     }
+    //
+    // if(petIndex === 'NaN' || petIndex <0 || petIndex >= numPets){
+    //   console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
+    //   process.exit(1);
+    // }else if(petIndex>=0 && petIndex<numPets){
+    // console.log(pets[petIndex]);
+    // }else{
+    //   console.log(pets);
+    // }
+
   });
 }
 else if (cmd === 'create') {
@@ -61,6 +71,7 @@ else if (cmd === 'create') {
         if(writeErr){
           throw writeErr;
         }
+          console.log(newPet);
       });
 
     }else{
@@ -68,7 +79,6 @@ else if (cmd === 'create') {
       process.exit(1);
     }
 
-    console.log(pets);
   });
 }
 else if(cmd === 'update'){
@@ -79,12 +89,6 @@ else if(cmd === 'destroy'){
 }
 
 else{
-  console.error(`Usage: ${node} ${file} [ read | create | update | destroy ]`);
+  console.error(`Usage: ${node} ${file} [read | create | update | destroy]`);
   process.exit(1);
 }
-// for(var i = 0; i < pets.length; i++){
-//   if(petIndex === i){
-//     console.log(pets[i]);
-//   }
-// }
-// console.log(pets);
