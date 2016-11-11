@@ -16,7 +16,7 @@ var cmd = process.argv[2];
 
 //reads entire path/err first //data=pet info
 if(cmd ==='read'){
-  var petIndex = parseInt(process.argv[3]);
+  var petIndex = process.argv[3];
   fs.readFile(petPath, 'utf8', function(err, data) {
     if (err) {
       throw err;
@@ -25,17 +25,13 @@ if(cmd ==='read'){
     var pets = JSON.parse(data);
     var numPets = pets.length;
 
-    console.log(petIndex);
-    console.log(typeof petIndex);
-
-    //NaN not working with read a
-    if(petIndex === NaN || petIndex < 0 || petIndex >= numPets){
+    if(petIndex >= 0 && petIndex < numPets){
+      console.log(pets[petIndex]);
+    }else if(!petIndex){
+      console.log(pets);
+    }else{
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
       process.exit(1);
-    }else if(petIndex >=0 && petIndex < numPets){
-      console.log(pets[petIndex]);
-    }else{
-      console.log(pets);
     }
 
   });
@@ -80,6 +76,7 @@ else if (cmd === 'create') {
   });
 }
 else if(cmd === 'update'){
+
   console.log('update');
 }
 else if(cmd === 'destroy'){

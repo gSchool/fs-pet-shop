@@ -3,6 +3,12 @@
 var express = require('express');
 var app = express();
 
+var morgan = require('morgan');
+app.use(morgan('short'));
+
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 var pets = require('./pets.json');
 
 // app.use(express.static('public'));
@@ -20,12 +26,11 @@ app.get('/pets/:id', function(req, res){
   }
   else{
     return res.sendStatus(404);
-    res.send('Not Found');
   }
 });
 
-app.listen('3000', function(){
-  console.log('Server 3000 started');
+app.listen('3001', function(){
+  console.log('Server 3001 started');
 });
 
 module.exports = app;
