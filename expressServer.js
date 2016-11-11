@@ -27,3 +27,5 @@ app.get('/pets/:id', function(req, res){
 app.listen('3000', function(){
   console.log('Server 3000 started');
 });
+
+module.exports = app;
