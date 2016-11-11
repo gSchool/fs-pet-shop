@@ -8,6 +8,7 @@ var fs = require('fs');
 var path = require('path');
 //creates path to pwd
 var petPath = path.join(__dirname, 'pets.json');
+// console.log(petPath);
 
 var node = path.basename(process.argv[0]);
 var file = path.basename(process.argv[1]);
@@ -24,14 +25,15 @@ if(cmd ==='read'){
     var pets = JSON.parse(data);
     var numPets = pets.length;
 
-    if(petIndex>=0 && petIndex<numPets){
-      console.log(pets[petIndex]);
-    }else if(petIndex <0 || petIndex >numPets){
+    if(petIndex === 'NaN' || petIndex < 0 || petIndex >= pets.length){
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
-      process.exit(1);
+        process.exit(1);
+    }else if(petIndex >=0 || petIndex < numPets){
+      console.log(pets[petIndex]);
     }else{
       console.log(pets);
     }
+
   });
 }
 else if (cmd === 'create') {
@@ -46,7 +48,7 @@ else if (cmd === 'create') {
     var pKind = process.argv[4];
     var pName = process.argv[5];
 
-//if has age, kind, and name, create object to push into array
+    //if has age, kind, and name, create object to push into array
     if(pAge && pKind && pName){
       var newPet = {};
       newPet.age = pAge;
@@ -61,6 +63,9 @@ else if (cmd === 'create') {
         if(writeErr){
           throw writeErr;
         }
+
+        console.log(newPet);
+
       });
 
     }else{
@@ -68,7 +73,6 @@ else if (cmd === 'create') {
       process.exit(1);
     }
 
-    console.log(pets);
   });
 }
 else if(cmd === 'update'){
@@ -79,7 +83,7 @@ else if(cmd === 'destroy'){
 }
 
 else{
-  console.error(`Usage: ${node} ${file} [ read | create | update | destroy ]`);
+  console.error(`Usage: ${node} ${file} [read | create | update | destroy]`);
   process.exit(1);
 }
 // for(var i = 0; i < pets.length; i++){
