@@ -25,11 +25,14 @@ if(cmd ==='read'){
     var pets = JSON.parse(data);
     var numPets = pets.length;
 
+    console.log(petIndex);
+    console.log(typeof petIndex);
+
     //NaN not working with read a
-    if(petIndex === 'NaN' || petIndex < 0 || petIndex >= numPets){
+    if(petIndex === NaN || petIndex < 0 || petIndex >= numPets){
       console.error(`Usage: ${node} ${file} ${cmd} INDEX`);
       process.exit(1);
-    }else if(petIndex >=0 || petIndex < numPets){
+    }else if(petIndex >=0 && petIndex < numPets){
       console.log(pets[petIndex]);
     }else{
       console.log(pets);
