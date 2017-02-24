@@ -81,7 +81,7 @@ describe('pets restfulExpressServer', () => {
     it('should update pets.json when given a valid pet object', (done) => {
       request(app)
         .post('/pets')
-        .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
+        // .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
         .send({
           age: 2,
           kind: 'owl',
@@ -99,7 +99,7 @@ describe('pets restfulExpressServer', () => {
 
           request(app)
             .get('/pets/2')
-            .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
+            // .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
             .expect('Content-Type', /json/)
             .expect(200, {
               age: 2,
