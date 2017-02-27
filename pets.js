@@ -1,10 +1,11 @@
-let fs = require('fs');
+const fs = require('fs');
+const petsPath = path.join(__dirname, 'pets.json');
 
 if (!process.argv[2]) {
   console.error('Usage: node pets.js [read | create | update | destroy]')
   process.exit(1)
 } else if (process.argv[2] === 'read') {
-  fs.readFile('pets.json', (err, data) => {
+  fs.readFile(petsPath, (err, data) => {
     if (err) throw err;
     let jDatty = JSON.parse(data);
     if (!jDatty[process.argv[3]]) {
@@ -14,7 +15,7 @@ if (!process.argv[2]) {
     }
   })
 } else if (process.argv[2] === 'create') {
-  fs.readFile('pets.json', (err, data) => {
+  fs.readFile(petsPath, (err, data) => {
     if (err) throw err;
     let jDatty = JSON.parse(data);
     if (!process.argv[5]) {

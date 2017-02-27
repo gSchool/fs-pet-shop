@@ -1,6 +1,8 @@
+'use strict'
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const auth = require('basic-auth');
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 8000;
@@ -9,7 +11,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(morgan('short'));
 
-app.get('/pets', (req, res) => {
+const basicAuth = (req, res, next) => {
+
+  const credentials = auth(req);
+
+  if (!credentials || credentials.name !== 'admin' || credentials.pass !== 'meowmix') {
+    res.setHeader('WWW-Authenticate', 'Basic realm="Required"')
+    return res.sendStatus(401)
+  } else {
+    return next()
+  }
+}
+
+app.get('/pets', basicAuth, (req, res) => {
   fs.readFile('pets.json', (err, data) => {
     if (err) {
       console.error(err.stack);
@@ -94,15 +108,15 @@ app.patch('/pets/:id', (req, res) => {
 })
 
 app.delete('/pets/:id', (req, res) => {
-  fs.readFile('pets.json', (readErr, data) => {
+  fs.readFile('pets.json', 'utf-8', (readErr, data) => {
     if (readErr) {
       console.error(readErr.stack);
-      return res.sendStatus(500)
+      return res.sendStatus(500);
     }
-
     const pets = JSON.parse(data);
     const pet = pets.splice(req.params.id, 1)[0]
     const petStringify = JSON.stringify(pets);
+    res.set('Content-type', 'application/json')
     fs.writeFile('pets.json', petStringify, (writeErr) => {
       if (writeErr) {
         console.error(writeErr.stack);
