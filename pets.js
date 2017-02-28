@@ -1,6 +1,6 @@
 
 const fs = require('fs')
-const pets = require('./pets.json')
+var pets = require('./pets.json')
 
 var actionArg = process.argv[2]
 
@@ -22,17 +22,28 @@ switch (actionArg) {
         break;
       }
       break;
-  case "write":
-      //do something
-      break;
   case "create":
+      if (process.argv[2]== 'create' && process.argv[5] == undefined){
+        console.error("Usage: node pets.js create AGE KIND NAME")
+        process.exit(1)
+        break;
+      } else {
+      var addingPet = {age:parseInt(process.argv[3]), kind:process.argv[4], name:process.argv[5]}
+      pets.push(addingPet)
+      var stringPet = JSON.stringify(pets)
+      fs.writeFileSync('./pets.json', stringPet)
+      console.log(addingPet);
+      break;
+      }
+  case "update":
       //do something
       break;
   case "delete":
       //do something
       break;
   default:
-      console.error("node pets.js [read | create | update | destroy]")
+      console.error("Usage: node pets.js [read | create | update | destroy]")
+      process.exit(1)
 }
 
 
