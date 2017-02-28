@@ -45,14 +45,3 @@ switch (actionArg) {
       console.error("Usage: node pets.js [read | create | update | destroy]")
       process.exit(1)
 }
-
-
-// if (process.argv[2] =="read") {
-//   console.log(pets[1]);
-// }
-// if (process.argv[2] == undefined) {
-//   console.error("node pets.js [read | create | update | destroy]")
-// }
-// if (process.argv[2] =="write") {
-//   console.log("node pets.js AGE KIND NAME");
-// }
