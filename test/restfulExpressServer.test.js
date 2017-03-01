@@ -8,7 +8,7 @@ const mockFS = require('mock-fs');
 process.env.PORT = 3005;
 const app = require('../restfulExpressServer');
 
-describe('pets restfulExpressServer', () => {
+xdescribe('pets restfulExpressServer', () => {
   beforeEach(() => {
     const petsArr = [{
       age: 7,
@@ -29,7 +29,7 @@ describe('pets restfulExpressServer', () => {
     mockFS.restore();
   });
 
-  describe('GET /pets', () => {
+  xdescribe('GET /pets', () => {
     it('should return an array', (done) => {
       request(app)
         .get('/pets')
