@@ -5,7 +5,6 @@ const fs = require('fs')
 const PORT = process.env.PORT || 8000
 
 const server = http.createServer(function (req, res) {
-  // console.log(req.url);
 
   const index = req.url.substring(req.url.lastIndexOf("/") + 1, req.url.length)
 
