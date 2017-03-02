@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 require('dotenv').config();
 const fs = require('fs');
 const morgan = require('morgan');
@@ -14,12 +15,12 @@ app.use((req, res, next) => {
   const creds = auth(req);
 
   if (!creds || creds.name !== 'admin' || creds.pass !== 'meowmix') {
-    // console.log('ACCESS DENIED');
+    console.log('ACCESS DENIED');
     res.header('WWW-Authenticate', 'Basic realm="Required"');
     res.header('Content-Type', 'text/plain');
     res.status(401).send('Unauthorized');
   } else {
-    // console.log('ACCESS GRANTED');
+    console.log('ACCESS GRANTED');
     next();
   }
 });
@@ -27,17 +28,18 @@ app.use((req, res, next) => {
 app.use(morgan('short'));
 app.use(bodyParser.json());
 
-app.get('/pets', (req, res) => {
+
+app.get('/pets', (req, res, next) => {
   fs.readFile(path, (err, petsJSON) => {
-    if (err) throw err;
+    if (err) return next(err);
     res.header('Content-Type', 'application/json');
     res.status(200).send(JSON.parse(petsJSON));
   });
 });
 
-app.get('/pets/:id', (req, res) => {
+app.get('/pets/:id', (req, res, next) => {
   fs.readFile(path, 'utf8', (err, petsJSON) => {
-    if (err) throw err;
+    if (err) return next(err);
     const pets = JSON.parse(petsJSON);
     const petId = req.params.id;
 
@@ -51,9 +53,9 @@ app.get('/pets/:id', (req, res) => {
   });
 });
 
-app.post('/pets', (req, res) => {
+app.post('/pets', (req, res, next) => {
   fs.readFile(path, (err, petsJSON) => {
-    if (err) throw err;
+    if (err) return next(err);
     const pets = JSON.parse(petsJSON);
     const pet = req.body;
 
@@ -63,7 +65,7 @@ app.post('/pets', (req, res) => {
     } else {
       pets.push(pet);
       fs.writeFile(path, JSON.stringify(pets), (writeErr) => {
-        if (writeErr) throw writeErr;
+        if (writeErr) return next(writeErr);
         res.header('Content-Type', 'application/json');
         res.status(200).send(pet);
       });
@@ -71,9 +73,9 @@ app.post('/pets', (req, res) => {
   });
 });
 
-app.patch('/pets/:id', (req, res) => {
+app.patch('/pets/:id', (req, res, next) => {
   fs.readFile(path, (err, petsJSON) => {
-    if (err) throw err;
+    if (err) return next(err);
     const pets = JSON.parse(petsJSON);
     const petId = req.params.id;
     const pet = pets[petId];
@@ -90,32 +92,41 @@ app.patch('/pets/:id', (req, res) => {
     }
 
     fs.writeFile(path, JSON.stringify(pets), (writeErr) => {
-      if (writeErr) throw writeErr;
+      if (writeErr) return next(writeErr);
       res.header('Content-Type', 'application/json');
       res.send(pets[petId]);
     });
   });
 });
 
-app.delete('/pets/:id', (req, res) => {
+app.delete('/pets/:id', (req, res, next) => {
   fs.readFile(path, (err, petsJSON) => {
-    if (err) throw err;
+    if (err) return next(err);
     const pets = JSON.parse(petsJSON);
     const petId = req.params.id;
 
     const deletedPet = pets.splice(petId, 1)[0];
     const updatedPets = JSON.stringify(pets);
     fs.writeFile(path, updatedPets, (writeErr) => {
-      if (writeErr) throw writeErr;
+      if (writeErr) return next(writeErr);
       res.header('Content-Type', 'application/json');
       res.status(200).send(deletedPet);
     });
   });
 });
 
-app.all('/*', (req, res) => {
+app.get('/boom', (req, res, next) => {
+  next(new Error('Internal Server Error'));
+});
+
+app.use((req, res) => {
+  res.sendStatus(404);
+});
+
+app.use((err, req, res) => {
+  console.error(err.stack);
   res.header('Content-Type', 'text/plain');
-  res.status(404).send('Not Found');
+  return res.send(500, { message: err.message });
 });
 
 app.listen(port, () => {
