@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const fs = require('fs')
 var allPets = require('./pets.json')
 
-var PORT = process.env.PORT || 8000
+var PORT = 8000
 
 
 const server = http.createServer(function (req, res) {
