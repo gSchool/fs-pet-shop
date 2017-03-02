@@ -11,7 +11,6 @@ const server = http.createServer();
 
 
 server.on('request', (req, res) => {
-  console.log(`Incoming ${req.method} Request to ${req.url}`);
   if (req.method === 'GET' && req.url === '/pets') {
     fs.readFile(dataPath, 'utf8', (err, petsJSON) => {
       if (err) {
@@ -57,23 +56,28 @@ server.on('request', (req, res) => {
         res.setHeader('Content-Type', 'text/plain');
         res.end('Internal Server Error');
       }
-      let body = [];
+      const pets = JSON.parse(petsJSON);
+      let pet = [];
 
       req.on('data', (chunk) => {
-        body.push(chunk);
+        pet.push(chunk);
       }).on('end', () => {
-        body = Buffer.concat(body).toString();
+        pet = JSON.parse(Buffer.concat(pet).toString());
+        // console.log(pet);
+        if (Number.isNaN(pet.age) || !pet.kind || !pet.name) {
+          res.statusCode = 400;
+          res.setHeader('Content-Type', 'text/plain');
+          res.end('Bad Request');
+        } else {
+          pets.push(pet);
+          fs.writeFile(dataPath, JSON.stringify(pets), (writeErr) => {
+            if (writeErr) throw writeErr;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(pet));
+          });
+        }
       });
-
-      console.log('petsJSON: ', petsJSON);
-      const pets = JSON.parse(petsJSON);
-      const pet = body;
-      console.log('pet: ', pet);
-      console.log('pets: ', pets);
     });
-    // res.statusCode = 201;
-    // res.setHeader('Content-Type', 'application/json');
-    // res.end(petsJSON);
   } else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');

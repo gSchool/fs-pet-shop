@@ -55,11 +55,16 @@ app.post('/pets', (req, res) => {
         }
         res.header('Content-Type', 'application/json');
         res.status(200);
-        res.send();
-        console.log(pet);
+        res.send(pet);
       });
     }
   });
+});
+
+app.get('/*', (req, res) => {
+  res.header('Content-Type', 'text/plain');
+  res.status(404);
+  res.send('Not Found');
 });
 
 app.listen(port, () => {
