@@ -13,7 +13,7 @@ describe('pets restfulExpressServer', () => {
     const petsArr = [{
       age: 7,
       kind: 'rainbow',
-      name: 'fido'
+      name: 'Fido'
     }, {
       age: 4,
       kind: 'duck',
@@ -38,7 +38,7 @@ describe('pets restfulExpressServer', () => {
         .expect(200, [{
           age: 7,
           kind: 'rainbow',
-          name: 'fido'
+          name: 'Fido'
         }, {
           age: 4,
           kind: 'duck',

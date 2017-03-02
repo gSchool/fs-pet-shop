@@ -5,7 +5,6 @@ var allPets = require('./pets.json')
 
 var PORT = 8000
 
-// app.use(bodyParser.json())
 
 app.listen(PORT, function () {
     console.log('Server listening on port ' + PORT)
@@ -18,7 +17,8 @@ app.get('/pets', (req, res) => {
 app.get('/pets/:id', (req, res) => {
   var id = req.params.id
   if (req.params.id < 0 || req.params.id >= allPets.length) {
-    res.status(404).send('Not Found')
+    res.writeHead(404, {"Content-Type": "/text\/plain/"})
+    res.end('Not Found')
   } else {
     res.status(200).json(allPets[id])
   }
