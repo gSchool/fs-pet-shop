@@ -1,5 +1,5 @@
 # The Full-Stack Pet Shop
-
+snippet of pets.json [{"age":7,"kind":"rainbow","name":"fido"},{"age":5,"kind":"snake","name":"Buttons"}]
 This is a multi-day assignment split into the following parts. Your task is to complete each part's assignment, one at a time, before moving on to the next part.
 
 1. [Node Filesystem](fs.md)
