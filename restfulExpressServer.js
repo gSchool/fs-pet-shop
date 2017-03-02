@@ -1,7 +1,7 @@
 const fs = require('fs');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const auth = require('basic-auth');
+// const auth = require('basic-auth');
 const express = require('express');
 
 const app = express();
@@ -9,19 +9,19 @@ const port = process.env.PORT || 8000;
 const path = './pets.json';
 
 // Basic Authorization
-app.use((req, res, next) => {
-  const creds = auth(req);
-
-  if (!creds || creds.name !== 'admin' || creds.pass !== 'meowmix') {
-    console.log('ACCESS DENIED');
-    res.header('WWW-Authenticate', 'Basic realm="Required"');
-    res.header('Content-Type', 'text/plain');
-    res.status(401).send('Unauthorized');
-  } else {
-    console.log('ACCESS GRANTED');
-    next();
-  }
-});
+// app.use((req, res, next) => {
+//   const creds = auth(req);
+//
+//   if (!creds || creds.name !== 'admin' || creds.pass !== 'meowmix') {
+//     console.log('ACCESS DENIED');
+//     res.header('WWW-Authenticate', 'Basic realm="Required"');
+//     res.header('Content-Type', 'text/plain');
+//     res.status(401).send('Unauthorized');
+//   } else {
+//     console.log('ACCESS GRANTED');
+//     next();
+//   }
+// });
 
 app.use(morgan('short'));
 app.use(bodyParser.json());
