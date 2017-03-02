@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
