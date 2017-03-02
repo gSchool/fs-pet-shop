@@ -6,10 +6,8 @@ if (!action) {
   console.error('Usage: node pets.js [read | create | update | destroy]')
   process.exit(1)
 } else {
-  // console.log(args)
   switch (action.toUpperCase()) {
     case 'READ':
-      // console.log('read')
       if (!args[0]) {
         fs.readFile('./pets.json', read);
       } else {
@@ -21,12 +19,10 @@ if (!action) {
         console.error("Usage: node pets.js create AGE KIND NAME")
         process.exit(1)
       } else {
-        // console.log(typeof parseInt(args[0]))
         fs.readFile('./pets.json', writeFile)
       }
     default:
       console.error('Usage: node pets.js [read | create | update | destroy]')
-
   }
 }
 
