@@ -3,7 +3,6 @@ const http = require('http')
 const bodyParser = require('body-parser');
 const PORT = 3500;
 const fs = require('fs')
-var database = require('./pets.json')
 
 
 const server = http.createServer(
