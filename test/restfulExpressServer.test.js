@@ -126,7 +126,7 @@ describe('pets restfulExpressServer', () => {
   describe('PATCH method', () => {
     it('should update pets.json when given a complete pet object', (done) => {
       request(app)
-        .patch('/pets/1')
+        .patch('/pets/2')
         .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
         .send({
           age: 2,
@@ -144,7 +144,7 @@ describe('pets restfulExpressServer', () => {
           }
 
           request(app)
-            .get('/pets/1')
+            .get('/pets/2')
             .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
             .expect('Content-Type', /json/)
             .expect(200, {
@@ -188,20 +188,20 @@ describe('pets restfulExpressServer', () => {
   describe('DELETE method', () => {
     it('should remove a pet from pets.json', (done) => {
       request(app)
-        .del('/pets/1')
+        .del('/pets/2')
         .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
         .expect('Content-type', /json/)
         .expect(200, {
-          age: 4,
-          kind: 'duck',
-          name: 'Bob'
+          age: 2,
+          kind: 'owl',
+          name: 'Hugo'
         }, (err, _res) => {
           if (err) {
             return done(err);
           }
 
           request(app)
-            .get('/pets/1')
+            .get('/pets/2')
             .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
             .expect('Content-Type', /text\/plain/)
             .expect(404, 'Not Found', done);

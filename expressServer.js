@@ -1,4 +1,4 @@
-const pets = require('./pets.json')
+const pets = require('./pets2.json')
 const express = require('express')
 const server = express()
 const bodyParser = require('body-parser')

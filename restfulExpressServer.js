@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 8000
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(morgan('default'))
+// app.use(morgan('default'))
 
 // LISTEN
 app.listen(PORT, function () {
@@ -22,6 +22,7 @@ app.get('/pets', function (req, res) {
 
 // GET PETS BY ID
 app.get('/pets/:id', function (req, res) {
+
   const index = req.params.id
   if (index >= 0 && index < pets.length) {
     res.status(200).json(pets[index])
@@ -34,10 +35,9 @@ app.get('/pets/:id', function (req, res) {
 
 // POST PETS
 app.post('/pets/', function (req, res) {
-
-  var petAge = parseInt(req.headers.age)
-  var petKind = req.headers.kind
-  var petName = req.headers.name
+  var petAge = parseInt(req.body.age)
+  var petKind = req.body.kind
+  var petName = req.body.name
 
   if (!isNaN(petAge) && !!petKind && !!petName) {
 
@@ -50,7 +50,7 @@ app.post('/pets/', function (req, res) {
     pets.push(newPet)
     fs.writeFileSync('./pets.json', JSON.stringify(pets))
     res.setHeader('Content-Type', 'application/json')
-    res.status(200).send(pets)
+    res.status(200).send(pets[pets.length-1])
   }
   else {
     res.setHeader("Content-Type", "text/plain")
@@ -64,20 +64,20 @@ app.patch('/pets/:id', function (req, res) {
 
   if (index >=0 && index < pets.length) {
 
-    if (isNaN(req.headers.age)) {
+    if (isNaN(req.body.age)) {
       var petAge = pets[index].age
     } else {
-      var petAge = parseInt(req.headers.age)
+      var petAge = parseInt(req.body.age)
     }
-    if (!req.headers.name) {
+    if (!req.body.name) {
       var petName = pets[index].name
     } else {
-      var petName = req.headers.name
+      var petName = req.body.name
     }
-    if (!req.headers.kind) {
+    if (!req.body.kind) {
       var petKind = pets[index].kind
     } else {
-      var petKind = req.headers.kind
+      var petKind = req.body.kind
     }
 
     var updatedPet = {
@@ -90,10 +90,11 @@ app.patch('/pets/:id', function (req, res) {
 
     fs.writeFileSync('./pets.json', JSON.stringify(pets))
     res.setHeader("Content-Type", "application/json")
-    res.end()
+    res.status(200).send(pets[index])
   }
 
   else {
+    res.setHeader("Content-Type", "text/plain")
     res.status(400).send('Bad Request')
   }
 })
@@ -101,14 +102,14 @@ app.patch('/pets/:id', function (req, res) {
 // DELETE PET
 app.delete('/pets/:id', function (req, res) {
   const index = parseInt(req.params.id)
-
   if (index >= 0 && index < pets.length) {
-    pets.splice(index, 1)
+    var deletedPet = pets.splice(index, 1)
 
     fs.writeFileSync('./pets.json', JSON.stringify(pets))
-    res.status(200).json(pets)
+    res.status(200).json(deletedPet[0])
   }
   else {
+    res.setHeader("Content-Type", "text/plain")
     res.status(404).send('Not Found')
   }
 })
