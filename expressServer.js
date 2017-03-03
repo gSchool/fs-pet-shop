@@ -21,8 +21,8 @@ app.listen( PORT, () => {
 app.get('/pets', (req, res) => {
   fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
     if (err) {
-      console.error(err.stack);
-      return res.sendStatus(500);
+      console.error('Not Found');
+      return res.sendStatus(404);
     }
 
   var pets = JSON.parse(petsJSON);
@@ -39,9 +39,14 @@ app.get('/pets/:id', (req,res) => {
 
     var id = Number.parseInt(req.params.id);
     var pets = JSON.parse(petsJSON);
-// have an issue with res.send inside of this function....a res.send works up above, but here it causes an error wtf!
+
+    if (id < 0 || id > pets.length - 1) {
+      console.error('Not Found');
+      return res.sendStatus(404);
+    }
     // res.set('Content-Type','text/plain');
-    res.sendStatus(200).send(id);
+    // res.sendStatus(200).
+    res.send(pets[id]);
     // res.sendStatus(200);
   })
 })
