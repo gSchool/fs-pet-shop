@@ -27,49 +27,40 @@ router.get('/:id', function(req, res){
 })
 
 router.post('/', function(req, res){
-fs.readFile('./pets.json', 'utf-8', function(err, data){
-  var arr = JSON.parse(data)
-  var body =[]
-  req.on('data', function(chunk) {
-body.push(chunk);
-}).on('end', function() {
-body = Buffer.concat(body).toString();
+  fs.readFile('./pets.json', 'utf-8', function(err, data){
+    var arr = JSON.parse(data)
+    var body = req.body
 // at this point, `body` has the entire request body stored in it as a string
-arr.push(JSON.parse(body))
-if (!!err) {console.error(err); res.end(err)}
-else {
-fs.writeFile('./pets.json', JSON.stringify(arr), 'utf-8', function(err, data){if(!!err){res.end(err)}
-res.writeHead(200, {'Content-Type': 'application/json'})
-res.end(JSON.stringify(body))
-})
-}
-});
-})
+    arr.push(body)
+    fs.writeFile('./pets.json', JSON.stringify(arr), 'utf-8', function(err, data){
+      if(!!err){res.end(err)}
+      res.writeHead(200, {'Content-Type': 'application/json'})
+      res.end(JSON.stringify(body))
+
+    })
+  });
 })
 
 router.put('/:id', function(req, res){
-var index = parseInt(req.params.id)
-fs.readFile('./pets.json', 'utf-8', function(err, data){
-  var arr = JSON.parse(data)
-  var body =[]
-  req.on('data', function(chunk) {
-body.push(chunk);
-}).on('end', function() {
-body = Buffer.concat(body).toString();
+  var index = parseInt(req.params.id)
+  fs.readFile('./pets.json', 'utf-8', function(err, data){
+    var arr = JSON.parse(data)
+    var body = req.body
 // at this point, `body` has the entire request body stored in it as a string
-if(! arr[index]){res.writeHead(404, {'Content-Type': 'text/plain'}); res.end('Not Found')} else {
-arr[index] = JSON.parse(body)
-if (!!err) {console.error(err); res.end(err)}
-else {
-fs.writeFile('./pets.json', JSON.stringify(arr), 'utf-8', function(err, data){if(!!err){res.end(err)}
-res.writeHead(200, {'Content-Type': 'application/json'})
-res.end(body)
-})
-}
-}
+    if(! arr[index]){
+      res.writeHead(404, {'Content-Type': 'text/plain'}); res.end('Not Found')
+    } else {
+      arr[index] = body
+      fs.writeFile('./pets.json', JSON.stringify(arr), 'utf-8', function(err, data){
+        if(!!err){res.end(err)
+        } else {
+          res.writeHead(200, {'Content-Type': 'application/json'})
+          res.end(JSON.stringify(body))
+        }
+      })
+    }
+  })
 });
-})
-})
 
 
 router.delete('/:id', function(){
