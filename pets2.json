@@ -1,0 +1,12 @@
+[
+  {
+    "age": 7,
+    "kind": "rainbow",
+    "name": "Fido"
+  },
+  {
+    "age": 5,
+    "kind": "snake",
+    "name": "Buttons"
+  }
+]
