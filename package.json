@@ -5,7 +5,7 @@
   "main": "restfulExpressServer.js",
   "scripts": {
     "lint": "eslint",
-    "start": "nodemon",
+    "start": "node restfulExpressServer.js",
     "test": "mocha"
   },
   "repository": {
