@@ -3,10 +3,11 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const fs = require('fs')
+const PORT = process.env.PORT || 8000
 
 module.exports = app
 
-app.listen(8000)
+app.listen(PORT)
 
 app.use(bodyParser.json())
 
