@@ -50,7 +50,7 @@ if (command === 'read') {
             console.error('Usage: node pets.js create AGE KIND NAME');
             process.exit(5);
         } else {
-
+            var newPet = {};
             //  var newPetAddedToDB =
             petsDB.push(newPetInfo);
             // console.log(petsDB);

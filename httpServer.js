@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const petsPath = path.join(__dirname, 'pets.json');
 const http = require('http');
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 3010;
 
 const petsData = 'pets.json';
 

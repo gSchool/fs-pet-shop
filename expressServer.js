@@ -12,10 +12,6 @@ var petsPath = path.join(__dirname, 'pets.json');
 const petsData = 'pets.json';
 
 
-const PORT = process.env.PORT || 3005;
-app.listen( PORT, () => {
-  console.log('listening on port', PORT)
-})
 
 
 app.get('/pets', (req, res) => {
