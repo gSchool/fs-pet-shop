@@ -27,39 +27,4 @@ switch (process.argv[2]) {
           }else{
             console.log(console.error('node pets.js read) INDEX'))
           }
-
-
-
-//       case 'write':
-//       if(process.argv[2] === 'write' && process.argv[3]!==undefined) {
-//
-//       }
-//       }
-//
-//
-//
-//
-//
-//
-// if (process.argv[2] === 'create' && process.argv[3] === undefined) {
-//     console.log('Usage: node pets.js create AGE KIND NAME');
-//     process.exit(1)
-// }
-//
-// if (process.argv[2] === 'create' && process.argv[3] !== undefined) {
-//     var myNewPet = {
-//         age: parseInt(process.argv[3]),
-//         type: process.argv[4],
-//         name: process.argv[5]
-//     };
-//     process.exit(1)
-//
-//     fs.writeFile('pets.json', JSON.stringify(myNewPet), 'utf8', function(err) {
-//         if (err) {
-//             return console.log(err);
-//         }
-//         petStoreData.push(myNewPet)
-//         console.log(petStoreData)
-//
-//     });
-// }
+        }
