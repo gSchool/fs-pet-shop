@@ -6,7 +6,7 @@ const path = require("path");
 const petsPath = path.join(__dirname, "pets.json");
 // const petRegEx =  /pets\/(.*)$/;
 const server = http.createServer(function (req, res){
-  const petUrl = req.url
+  const petUrl = req.url;
   const petNumb = petUrl.slice(6);
   if (req.method === "GET"){
     if (req.url === "/pets"){
@@ -58,12 +58,6 @@ const server = http.createServer(function (req, res){
     res.setHeader('Content-Type', 'text/plain');
     res.end('Not Found');
   }
-});
-
-const port = 8000;
-
-server.listen(port, function(){
-  console.log(`Listening on port ${port}`);
 });
 
 module.exports = server;
