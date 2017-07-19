@@ -1,72 +1,100 @@
 'use strict';
 
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const express = require('express');
 const fs = require('fs');
-// const morgan = require('morgan');
+const morgan = require('morgan');
 const path = require('path');
 const petsPATH = path.join(__dirname, 'pets.json');
 
 const app = express();
 
-// app.use(morgan('short'));
-// app.use(bodyParser.json());
+app.use(morgan('short'));
+app.use(bodyParser.json());
 
-
-//TODO get all the pets
-app.get('/pets', (req, res) => {
+app.get('/pets', (req, res, next) => {
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
     if (err) {
-      console.error(err.stack);
       res.status(500);
-      res.send(err.message);
+      return next(err);
     }
 
     let pets = JSON.parse(petsJSON);
     res.send(pets);
   });
-
 });
 
-//TODO get pets at 0, 1, 2
-app.get('/pets/:id', (req, res) => {
+app.get('/pets/:id', (req, res, next) => {
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
     if (err) {
-      console.error(err);
       res.status(500);
-      res.send(err.message);
+      return next(err);
     }
 
     let id = Number.parseInt(req.params.id);
     const pets = JSON.parse(petsJSON);
     const pet = pets[id];
 
-    if (id < 0 || id >= pets.length || Number.isNaN(id) ) {
-      res.sendStatus(404);
+    if (!id || id < 0 || id >= pets.length || Number.isNaN(id) ) {
+      res.status(404);
+      return next(err);
     };
 
     res.send(pet);
   });
 });
 
+app.post('/pets', (req, res, next) => {
+  const age = req.body.age;
+  const name = req.body.name;
+  const kind = req.body.kind;
 
+  if (!age || !name || !kind || Number.isNaN(age)) {
+    res.status(404);
+    return next(err);
+  }
 
-//TODO error (404; Not Found) for pets at 2, -1
+  fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
+    if (err) {
+      res.status(500);
+      return next(err);
+    }
 
+    let pets = JSON.parse(petsJSON);
+    const newPet = {
+      age: age,
+      name: name,
+      kind: kind
+    };
+    pets.push(newPet);
+    pets = JSON.stringify(pets);
 
-const port = process.env.port || 8000
+    fs.writeFile(petsPATH, pets, (err) => {
+      if (err) {
+        res.status(500);
+        return next(err);
+      };
+      res.send(newPet);
+    });
+
+  });
+});
+
+app.use((req, res, next) => {
+  res.status(404);
+  let err = {message: "Not Found"};
+  next(err);
+})
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.send(err)
+});
+
+const port = process.env.port || 8000;
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
-})
-
+});
 
 module.exports = app;
-
-
-
-// nodemon expressServer.js
-// http GET localhost:8000/pets
-// npm test test/expressServer.test.js
-// http POST localhost:8000/pets age=3 kind=parakeet name=Cornflake
-// npm test test/expressServer.bonus.test.js
