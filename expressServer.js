@@ -35,27 +35,33 @@ const petsPath = path.join(__dirname, 'pets.json');
   });
   // else if (req.method === 'GET' && req.url === '/pets/0') {
     // fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
-    app.get('/animals/:id', (req, res) => {
+    app.get('/pets/:id', (req, res) => {
       const id = req.params.id;
+
+      fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
       if (err) {
         console.error(err.stack);
 
         res.status(500);
         // res.setHeader('Content-Type', 'text/plain');
-        res.send(err.message);
+        res.sendStatus(500);
 
         // return;
       }
+      const pets = JSON.parse (petsJSON);
+
       if (id < 0 || id >= pets.length || Number.isNaN(id)) {
-      res.status(400);
+      res.status(404);
+      res.sendStatus(404);
       }
-      const pets = JSON.parse(petsJSON);
+      // const pets = JSON.parse(petsJSON);
       const singlePet = pets[id];
-      const petJSON = JSON.stringify(singlePet);
+      // const petJSON = JSON.stringify(singlePet);
 
       // res.setHeader('Content-Type', 'application/json');
-      res.send(petJSON);
+      res.send(singlePet);
     });
+  });
   // }
   // else if (req.method === 'GET' && req.url === '/pets/1') {
   //   fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
@@ -78,7 +84,7 @@ const petsPath = path.join(__dirname, 'pets.json');
   // }
 //*********************************
 
-app.post('/animals', (req, res) => {
+app.post('/pets', (req, res) => {
   const age = req.body.age;
   const kind = req.body.kind;
   const name = req.body.name;
@@ -87,7 +93,7 @@ app.post('/animals', (req, res) => {
     res.sendStatus(400);
   }
 
-  fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
+  fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
     if (err) {
       res.sendStatus(500);
     }
@@ -98,14 +104,15 @@ app.post('/animals', (req, res) => {
       kind: kind,
       name: name,
     };
+    const newPetJSON = JSON.stringify(newPet);
 
-    animals.push(newPet);
+    pets.push(newPet);
     const newPetsJSON = JSON.stringify(pets);
-    fs.writeFile(petsPATH, newPetsJSON, (err) => {
+    fs.writeFile(petsPath, newPetsJSON, (err) => {
       if (err) {
         res.sendStatus(500);
       }
-      res.send(newPet);
+      res.send(newPetJSON);
     });
   });
 });
@@ -118,10 +125,14 @@ app.post('/animals', (req, res) => {
   // }
 // });
 
+app.use((req, res) => {
+  res.sendStatus(404);
+});
+
 const port = process.env.PORT || 8000;
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
 
-// module.exports = server;
+module.exports = app;
