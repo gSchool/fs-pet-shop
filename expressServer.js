@@ -21,7 +21,7 @@ app.get("/pets", (req, res) => {
   });
 });
 
-app.get("/pets:id", (req, res) => {
+app.get("/pets/:id", (req, res) => {
   fs.readFile(petsPath, "utf8", (err, petsJSON) =>{
     if(err){
       console.error(err.stack);
