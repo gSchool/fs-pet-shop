@@ -23,10 +23,15 @@ const server = http.createServer(function (req, res){
         }
       });
     }
+    else if (req.url === "/pets/") {
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'text/plain');
+      res.end('Not Found');
+    }
     else if (petNumb > 1 || petNumb < 0){
       res.statusCode = 404;
       res.setHeader('Content-Type', 'text/plain');
-      res.end('Not found');
+      res.end('Not Found');
     }
     else{
       fs.readFile(petsPath, "utf8", function (err, petsJSON){
@@ -51,7 +56,7 @@ const server = http.createServer(function (req, res){
   else {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain');
-    res.end('Not found');
+    res.end('Not Found');
   }
 });
 
