@@ -33,7 +33,6 @@ app.get("/pets/:id", (req, res) => {
     if (id < 0 || id >= pets.length || Number.isNaN(id)){
       return res.sendStatus(404);
     }
-    res.set("Content-Type", "text/plain");
     res.send(pets[id]);
   });
 });
@@ -51,3 +50,5 @@ const port = process.env.PORT || 8000;
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+module.exports = app;
