@@ -12,6 +12,8 @@ const morgan = require('morgan');
 
 const app = express();
 
+app.use(bodyParser.json());
+
 
 const petsPath = path.join(__dirname, 'pets.json');
 
@@ -89,7 +91,10 @@ app.post('/pets', (req, res) => {
   const kind = req.body.kind;
   const name = req.body.name;
 
-  if (age || kind || name) {
+// console.log('age: ', age, 'kind: ', kind, 'name: ', name);
+
+  if (!age || !kind || !name) {
+    // console.log('**************line97')
     res.sendStatus(400);
   }
 
