@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+let fs = require('fs');
 const http = require('http');
 const path = require('path');
 
@@ -19,10 +19,10 @@ const server = http.createServer(function(req, res){
         if (urlArray[2]) {
           let petLoc = Number(urlArray[2]);
           let petList = JSON.parse(data);
-          if (petLoc < 0 || petLoc > petList.length-1) {
-            res.statusCode = 404;
+          if (petLoc < 0 || petLoc >= petList.length || isNaN(petLoc)) {
+            res.statusCode = 400;
             res.setHeader('Content-Type', 'text/plain');
-            res.end('Not Found');
+            res.end('Bad Request');
             return;
           } else {
             res.statusCode = 200;
