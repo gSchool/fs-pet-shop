@@ -2,7 +2,7 @@
 
 const bodyParser = require('body-parser');
 const express = require('express');
-const fs = require('fs');
+let fs = require('fs');
 const morgan = require('morgan');
 const path = require('path');
 const petsPATH = path.join(__dirname, 'pets.json');

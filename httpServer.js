@@ -1,7 +1,7 @@
 'use strict';
 
 const http = require('http');
-const fs = require('fs');
+let fs = require('fs');
 const path = require('path');
 const petsPath = path.join(__dirname, 'pets.json');
 const petRegExp = /pets\/?(.*)/;

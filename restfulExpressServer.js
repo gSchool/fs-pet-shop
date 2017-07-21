@@ -2,11 +2,10 @@
 
 const bodyParser = require('body-parser');
 const express = require('express');
-const fs = require('fs');
+let fs = require('fs');
 const morgan = require('morgan');
 const path = require('path');
 const petsPATH = path.join(__dirname, 'pets.json');
-
 const app = express();
 
 app.use(morgan('short'));
@@ -52,8 +51,8 @@ app.post('/pets', (req, res, next) => {
   console.log(age, name, kind);
 
   if (!age || !name || !kind || Number.isNaN(age)) {
-    res.status(404);
-    return next('Bad request: body');
+    res.status(400);
+    return next({message:'Bad Request'});
   }
 
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
@@ -163,8 +162,7 @@ app.delete('/pets/:id', (req, res, next) => {
         res.status(500);
         return next(writeErr)
       }
-
-      res.send(deletedPet);
+      res.send(deletedPet[0]);
     })
 
 
@@ -179,7 +177,8 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.log(err);
-  res.send(err)
+  res.set({'Content-Type':'text/plain'})
+  res.send(err.message)
 });
 
 const port = process.env.port || 8000;
