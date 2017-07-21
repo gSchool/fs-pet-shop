@@ -87,7 +87,7 @@ describe('pets restfulExpressServer', () => {
           kind: 'owl',
           name: 'Hugo'
         })
-        .expect('Content-type', /json/)
+        .expect('Content-Type', /json/)
         .expect(200, {
           age: 2,
           kind: 'owl',

@@ -13,6 +13,7 @@ const morgan = require('morgan');
 const app = express();
 
 app.use(bodyParser.json());
+app.use(morgan('short'));
 
 
 const petsPath = path.join(__dirname, 'pets.json');
@@ -109,7 +110,7 @@ app.post('/pets', (req, res) => {
       kind: kind,
       name: name,
     };
-    const newPetJSON = JSON.stringify(newPet);
+    // const newPetJSON = JSON.parse(newPet);
 
     pets.push(newPet);
     const newPetsJSON = JSON.stringify(pets);
@@ -117,7 +118,8 @@ app.post('/pets', (req, res) => {
       if (err) {
         res.sendStatus(500);
       }
-      res.send(newPetJSON);
+      console.log(typeof(newPet));
+      res.send(newPet);
     });
   });
 });
