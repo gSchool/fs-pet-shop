@@ -85,7 +85,6 @@ const petsPath = path.join(__dirname, 'pets.json');
   //     res.end(petJSON);
   //   });
   // }
-//*********************************
 
 app.post('/pets', (req, res) => {
   const age = req.body.age;
@@ -106,6 +105,47 @@ app.post('/pets', (req, res) => {
 
     const pets = JSON.parse(petsJSON);
     const newPet = {
+      age: age,
+      kind: kind,
+      name: name,
+    };
+    // const newPetJSON = JSON.parse(newPet);
+
+    pets.push(newPet);
+    const newPetsJSON = JSON.stringify(pets);
+    fs.writeFile(petsPath, newPetsJSON, (err) => {
+      if (err) {
+        res.sendStatus(500);
+      }
+      console.log(typeof(newPet));
+      res.send(newPet);
+    });
+  });
+});
+
+//**********************************
+
+app.patch('/pets/:id', (req, res) => {
+  const id = req.params.id;
+  const age = req.body.age;
+  const kind = req.body.kind;
+  const name = req.body.name;
+
+// console.log('age: ', age, 'kind: ', kind, 'name: ', name);
+
+  if (!id || !age || !kind || !name) {
+    // console.log('**************line97')
+    res.sendStatus(400);
+  }
+
+  fs.readFile(petsPath, 'utf8', (err, petsJSON) => {
+    if (err) {
+      res.sendStatus(500);
+    }
+
+    const pets = JSON.parse(petsJSON);
+    const newPet = {
+      id: id,
       age: age,
       kind: kind,
       name: name,
