@@ -44,7 +44,7 @@ app.get('/pets/:id', (req, res, next) => {
   });
 });
 
-app.post('/pets', (req, res, next) => {
+app.post('/pets', (req, res, next, err) => {
   const age = req.body.age;
   const name = req.body.name;
   const kind = req.body.kind;
@@ -78,6 +78,67 @@ app.post('/pets', (req, res, next) => {
     });
 
   });
+});
+
+app.patch('/pets/:id', (req, res, next) => {
+  fs.readFile(petsPATH, 'utf8', (readErr, petsJSON) => {
+    if (readErr) {
+      res.status(500);
+      return next(err);
+    };
+
+    console.log("in patch readFile");
+    let id = Number.parseInt(req.params.id);
+    let pets = JSON.parse(petsJSON);
+
+    if (id < 0 || id >= pets.length || Number.isNaN(id)) {
+      res.status(404);
+      return next(readErr)
+    }
+
+    const age = Number.parseInt(req.body.age);
+    const name = req.body.name;
+    const kind = req.body.kind;
+    const petToChange = pets[id];
+
+    console.log(age, name, kind);
+    console.log(Number.isNaN('tricky'));
+
+    if (age && Number.isNaN(age)) {
+      console.log("that's not a number of years");
+      res.status(404);
+      return next(readErr);
+    }
+
+    if (!name && !age && !kind) {
+      res.status(400);
+      return next(readErr)
+    }
+
+    if (name) {
+      petToChange.name = name;
+    }
+    if (age) {
+      petToChange.age = age;
+    }
+    if (kind) {
+      petToChange.kind = kind;
+    }
+
+    const newPetsJSON = JSON.stringify(pets);
+
+    fs.writeFile(petsPATH, newPetsJSON, (writeErr) => {
+      if (writeErr) {
+        res.status(500);
+        return next(writeErr)
+      };
+
+      res.send(petToChange);
+    })
+
+
+  });
+
 });
 
 app.use((req, res, next) => {

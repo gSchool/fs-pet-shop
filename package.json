@@ -8,6 +8,9 @@
     "start": "nodemon",
     "test": "mocha"
   },
+  "engines": {
+  "node": "8.1.4"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gSchool/fs-pet-shop.git"
