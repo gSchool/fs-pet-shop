@@ -2,7 +2,7 @@
 
 const bodyParser = require('body-parser');
 const express = require('express');
-const fs = require('fs');
+let fs = require('fs');
 const http = require('http');
 const path = require('path');
 
@@ -68,6 +68,11 @@ app.post('/pets', (req, res, next) => {
       res.send(newPet);
     });
   });
+});
+
+app.use((req, res, next) => {
+  res.set({'Content-Type' : 'text/plain'});
+  res.sendStatus(404);
 });
 
 app.use((err, req, res, next) => {
