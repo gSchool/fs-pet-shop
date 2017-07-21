@@ -31,7 +31,7 @@ app.get('/pets/:id', (req, res, next) => {
       return next(err);
     }
 
-    let id = Number.parseInt(req.params.id);
+    const id = Number.parseInt(req.params.id);
     const pets = JSON.parse(petsJSON);
     const pet = pets[id];
 
@@ -44,14 +44,16 @@ app.get('/pets/:id', (req, res, next) => {
   });
 });
 
-app.post('/pets', (req, res, next, err) => {
+app.post('/pets', (req, res, next) => {
   const age = req.body.age;
   const name = req.body.name;
   const kind = req.body.kind;
 
+  console.log(age, name, kind);
+
   if (!age || !name || !kind || Number.isNaN(age)) {
     res.status(404);
-    return next(err);
+    return next('Bad request: body');
   }
 
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
@@ -88,7 +90,7 @@ app.patch('/pets/:id', (req, res, next) => {
     };
 
     console.log("in patch readFile");
-    let id = Number.parseInt(req.params.id);
+    const id = Number.parseInt(req.params.id);
     let pets = JSON.parse(petsJSON);
 
     if (id < 0 || id >= pets.length || Number.isNaN(id)) {
@@ -105,7 +107,6 @@ app.patch('/pets/:id', (req, res, next) => {
     console.log(Number.isNaN('tricky'));
 
     if (age && Number.isNaN(age)) {
-      console.log("that's not a number of years");
       res.status(404);
       return next(readErr);
     }
@@ -134,12 +135,41 @@ app.patch('/pets/:id', (req, res, next) => {
       };
 
       res.send(petToChange);
+    });
+  });
+});
+
+app.delete('/pets/:id', (req, res, next) => {
+  fs.readFile(petsPATH, 'utf8', (readErr, petsJSON) => {
+    if (readErr) {
+      res.status(500);
+      return next(err);
+    }
+
+    const id = Number.parseInt(req.params.id);
+    const pets = JSON.parse(petsJSON);
+
+    if (id < 0 || id >= pets.length || Number.isNaN(id)) {
+      res.status(404);
+      return next(readErr)
+    }
+
+    const deletedPet = pets.splice(id, 1);
+    console.log(id, deletedPet)
+    const newPetsJSON = JSON.stringify(pets);
+
+    fs.writeFile(petsPATH, newPetsJSON, (writeErr) => {
+      if (writeErr) {
+        res.status(500);
+        return next(writeErr)
+      }
+
+      res.send(deletedPet);
     })
 
 
-  });
-
-});
+  })
+})
 
 app.use((req, res, next) => {
   res.status(404);
