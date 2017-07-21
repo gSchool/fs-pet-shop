@@ -41,6 +41,7 @@ describe('pets httpServer', () => {
 
   describe('GET /pets', () => {
     it('should return an array of pets', (done) => {
+      console.log('inside test');
       request(app)
         .get('/pets')
         .set('Accept', 'application/json')

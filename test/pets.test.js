@@ -186,8 +186,9 @@ describe('pets commandline tool', () => {
             '{ age: 3, kind: \'parakeet\', name: \'Cornflake\' }',
             ''
           ];
-
-          assert.deepEqual(stdout.split(/\r?\n/), msgs);
+          var out = stdout.split(/\r?\n/)
+          console.log(out);
+          assert.deepEqual(out, msgs);
           callback();
         };
       };
