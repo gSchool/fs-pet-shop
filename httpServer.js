@@ -20,9 +20,9 @@ const server = http.createServer(function(req, res){
           let petLoc = Number(urlArray[2]);
           let petList = JSON.parse(data);
           if (petLoc < 0 || petLoc >= petList.length || isNaN(petLoc)) {
-            res.statusCode = 400;
+            res.statusCode = 404;
             res.setHeader('Content-Type', 'text/plain');
-            res.end('Bad Request');
+            res.end('Not Found');
             return;
           } else {
             res.statusCode = 200;
