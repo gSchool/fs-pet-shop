@@ -1,9 +1,8 @@
 "use strict";
 
-
 const express = require('express');
 const bodyParser = require("body-parser");
-const fs = require('fs');
+let fs = require('fs');
 const path = require('path');
 const app = express();
 
@@ -67,7 +66,7 @@ app.post("/pets", (req, res) => {
     if( Number.isNaN(parseInt(age)) || !kind || !name) {
       res.statusCode=400;
       res.setHeader("Content-Type","text/plain");
-      res.send("Bad Request");
+      return res.send("Bad Request");
     }
 
     const newPet = {name: name, age: age, kind: kind};
@@ -81,7 +80,7 @@ app.post("/pets", (req, res) => {
         console.error(writeErr.stack);
         return res.sendStatus(500);
       }
-        res.set('Content-Type', 'text/plain');
+        res.set('Content-Type', 'application/json');
         res.send(newPet);
     });
   });
@@ -109,24 +108,36 @@ app.patch("/pets/:id", (req, res) => {
       res.send("Not Found");
     }
 
-    if( Number.isNaN(parseInt(age)) || !kind || !name) {
+    if( Number.isNaN(parseInt(age)) && !kind && !name) {
       res.statusCode=400;
       res.setHeader("Content-Type","text/plain");
       res.send("Bad Request");
     }
 
-    const updatedPet = {name: name, age: age, kind: kind};
+    if(name !== undefined && name.trim().length > 0 ) {
+      pets[id].name = name;
+    }
+    if(age >= 0) {
+      pets[id].age = age;
+    }
+    if(kind !== undefined && kind.trim().length > 0 ) {
+      pets[id].kind = kind;
+    }
 
-    pets[id] = updatedPet;
+    const updatedPet = pets[id];
+
+    //let updatedPetStringified = JSON.stringify(updatedPet);
 
     const updatedPets = JSON.stringify(pets);
+
+
 
     fs.writeFile(pathPets, updatedPets, (writeErr) => {
       if (writeErr) {
         console.error(writeErr.stack);
         return res.sendStatus(500);
       }
-        res.set('Content-Type', 'text/plain');
+        res.set('Content-Type', 'application/json');
         res.send(updatedPet);
     });
   });
@@ -159,7 +170,7 @@ app.delete("/pets/:id", (req, res) => {
         console.error(writeErr.stack);
         return res.sendStatus(500);
       }
-        res.set('Content-Type', 'text/plain');
+        res.set('Content-Type', 'application/json');
         res.send(deletedPet);
     });
   });
