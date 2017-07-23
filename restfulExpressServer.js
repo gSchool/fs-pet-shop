@@ -1,6 +1,6 @@
 'use strict';
 const bodyParser = require("body-parser");
-const fs = require("fs");
+let fs = require("fs");
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
@@ -63,7 +63,7 @@ app.post("/pets", (req, res) => {
         console.error(err.stack);
         return res.sendStatus(500);
       }
-      res.set("Content-Type", "text/plain");
+      // res.set("Content-Type", "text/plain");
       res.send(newPet);
     });
   });
@@ -109,7 +109,7 @@ app.patch("/pets/:id", (req, res) => {
         console.error(err.stack);
         return res.sendStatus(500);
       }
-      res.set("Content-Type", "text/plain");
+      // res.set("Content-Type", "text/plain");
       res.send(pet);
     });
   });
@@ -135,8 +135,8 @@ app.delete("/pets/:id", (req, res) => {
         console.error(err.stack);
         return res.sendStatus(500);
       }
-      res.set("Content-Type", "text/plain");
-      res.send(pet);
+      // res.set("Content-Type", "text/plain");
+      res.send(pet[0]);
     });
   });
 });

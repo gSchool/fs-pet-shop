@@ -1,6 +1,6 @@
 'use strict';
 const bodyParser = require("body-parser");
-const fs = require("fs");
+let fs = require("fs");
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");

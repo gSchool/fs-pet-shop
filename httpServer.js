@@ -1,5 +1,5 @@
 "use strict";
-const fs = require("fs");
+let fs = require("fs");
 const http = require("http");
 const path = require("path");
 
@@ -59,5 +59,6 @@ const server = http.createServer(function (req, res){
     res.end('Not Found');
   }
 });
+
 
 module.exports = server;
