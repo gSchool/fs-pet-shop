@@ -35,7 +35,7 @@ app.get('/pets/:id', (req, res, next) => {
     const pets = JSON.parse(petsJSON);
     const pet = pets[id];
 
-    if (!id || id < 0 || id >= pets.length || Number.isNaN(id) ) {
+    if (id < 0 || id >= pets.length || Number.isNaN(id) ) {
       res.status(404);
       return next(err);
     };
@@ -148,8 +148,9 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
+  res.set({'Content-Type':'text/plain'})
   console.log(err);
-  res.send(err)
+  res.send(err.message)
 });
 
 const port = process.env.port || 8000;

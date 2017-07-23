@@ -14,8 +14,7 @@ app.use(bodyParser.json());
 app.get('/pets', (req, res, next) => {
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
     if (err) {
-      res.status(500);
-      return next(err);
+      return next({statusCode: 500, message:"There's been a server error."});
     }
 
     let pets = JSON.parse(petsJSON);
@@ -26,39 +25,32 @@ app.get('/pets', (req, res, next) => {
 app.get('/pets/:id', (req, res, next) => {
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
     if (err) {
-      res.status(500);
-      return next(err);
+      return next({statusCode: 500, message:"There's been a server error."});
     }
 
     const id = Number.parseInt(req.params.id);
     const pets = JSON.parse(petsJSON);
     const pet = pets[id];
 
-    if (!id || id < 0 || id >= pets.length || Number.isNaN(id) ) {
-      res.status(404);
-      return next(err);
-    };
+    if (id < 0 || id >= pets.length || Number.isNaN(id) ) {
+      return next({statusCode:404, message: "Not Found"})};
 
     res.send(pet);
   });
 });
 
 app.post('/pets', (req, res, next) => {
-  const age = req.body.age;
+  const age = Number.parseInt(req.body.age);
   const name = req.body.name;
   const kind = req.body.kind;
 
-  console.log(age, name, kind);
-
-  if (!age || !name || !kind || Number.isNaN(age)) {
-    res.status(400);
-    return next({message:'Bad Request'});
+  if (age === undefined|| name === undefined || kind === undefined || Number.isNaN(age)) {
+    return next({statusCode: 400, message:"Bad Request"})
   }
 
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
     if (err) {
-      res.status(500);
-      return next(err);
+      return next({statusCode: 500, message:"There's been a server error."});
     }
 
     let pets = JSON.parse(petsJSON);
@@ -72,8 +64,7 @@ app.post('/pets', (req, res, next) => {
 
     fs.writeFile(petsPATH, pets, (err) => {
       if (err) {
-        res.status(500);
-        return next(err);
+        return next({statusCode: 500, message:"There's been a server error."});
       };
       res.send(newPet);
     });
@@ -82,49 +73,37 @@ app.post('/pets', (req, res, next) => {
 });
 
 app.patch('/pets/:id', (req, res, next) => {
-  fs.readFile(petsPATH, 'utf8', (readErr, petsJSON) => {
-    if (readErr) {
-      res.status(500);
-      return next(err);
+  fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
+    if (err) {
+      return next({statusCode: 500, message:"There's been a server error."});
     };
 
-    console.log("in patch readFile");
     const id = Number.parseInt(req.params.id);
     let pets = JSON.parse(petsJSON);
 
     if (id < 0 || id >= pets.length || Number.isNaN(id)) {
       res.status(404);
-      return next(readErr)
+      return next({statusCode:404, message: "Not Found"})
     }
-
-    const age = Number.parseInt(req.body.age);
-    const name = req.body.name;
-    const kind = req.body.kind;
+    const updatedPetInfo = req.body;
     const petToChange = pets[id];
 
-    console.log(age, name, kind);
-    console.log(Number.isNaN('tricky'));
-
-    if (age && Number.isNaN(age)) {
-      res.status(404);
-      return next(readErr);
+//check to see whether any new information was submitted; if not, send a bad request error.
+    if (Object.keys(updatedPetInfo) === 0) {
+      return next({statusCode: 400, message:"Bad Request"})
     }
 
-    if (!name && !age && !kind) {
-      res.status(400);
-      return next(readErr)
+//compare new info submitted with the designated pet in pets; update any new information
+    for (let key in updatedPetInfo) {
+      if (petToChange.hasOwnProperty(key)) {
+        if (key === "age" && Number.isNaN(Number.parseInt(updatedPetInfo[key]))) {
+          return next({statusCode: 400, message:"Bad Request"})
+        }
+        petToChange[key] = updatedPetInfo[key];
+      }
     }
 
-    if (name) {
-      petToChange.name = name;
-    }
-    if (age) {
-      petToChange.age = age;
-    }
-    if (kind) {
-      petToChange.kind = kind;
-    }
-
+    pets[id] = petToChange;
     const newPetsJSON = JSON.stringify(pets);
 
     fs.writeFile(petsPATH, newPetsJSON, (writeErr) => {
@@ -141,43 +120,31 @@ app.patch('/pets/:id', (req, res, next) => {
 app.delete('/pets/:id', (req, res, next) => {
   fs.readFile(petsPATH, 'utf8', (readErr, petsJSON) => {
     if (readErr) {
-      res.status(500);
-      return next(err);
+      return next({statusCode: 500, message:"There's been a server error."});
     }
 
     const id = Number.parseInt(req.params.id);
     const pets = JSON.parse(petsJSON);
 
     if (id < 0 || id >= pets.length || Number.isNaN(id)) {
-      res.status(404);
-      return next(readErr)
+      return next({statusCode:404, message: "Not Found"})
     }
 
     const deletedPet = pets.splice(id, 1);
-    console.log(id, deletedPet)
     const newPetsJSON = JSON.stringify(pets);
 
     fs.writeFile(petsPATH, newPetsJSON, (writeErr) => {
       if (writeErr) {
-        res.status(500);
-        return next(writeErr)
+        return next({statusCode: 500, message:"There's been a server error."});
       }
       res.send(deletedPet[0]);
     })
-
-
   })
 })
 
-app.use((req, res, next) => {
-  res.status(404);
-  let err = {message: "Not Found"};
-  next(err);
-})
-
 app.use((err, req, res, next) => {
-  console.log(err);
   res.set({'Content-Type':'text/plain'})
+  res.status(err.statusCode);
   res.send(err.message)
 });
 
