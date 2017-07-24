@@ -81,50 +81,37 @@ app.post('/pets', (req, res, next, err) => {
 });
 
 app.patch('/pets/:id', (req, res, next) => {
-  fs.readFile(petsPATH, 'utf8', (readErr, petsJSON) => {
-    if (readErr) {
-      res.status(500);
-      return next(err);
+  fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
+    if (err) {
+      return next({statusCode: 500, message:"There's been a server error."});
     };
 
-    console.log("in patch readFile");
-    let id = Number.parseInt(req.params.id);
+    const id = Number.parseInt(req.params.id);
     let pets = JSON.parse(petsJSON);
 
     if (id < 0 || id >= pets.length || Number.isNaN(id)) {
       res.status(404);
-      return next(readErr)
+      return next({statusCode:404, message: "Not Found"})
     }
-
-    const age = Number.parseInt(req.body.age);
-    const name = req.body.name;
-    const kind = req.body.kind;
+    const updatedPetInfo = req.body;
     const petToChange = pets[id];
 
-    console.log(age, name, kind);
-    console.log(Number.isNaN('tricky'));
-
-    if (age && Number.isNaN(age)) {
-      console.log("that's not a number of years");
-      res.status(404);
-      return next(readErr);
+//check to see whether any new information was submitted; if not, send a bad request error.
+    if (Object.keys(updatedPetInfo) === 0) {
+      return next({statusCode: 400, message:"Bad Request"})
     }
 
-    if (!name && !age && !kind) {
-      res.status(400);
-      return next(readErr)
+//compare new info submitted with the designated pet in pets; update any new information
+    for (let key in updatedPetInfo) {
+      if (petToChange.hasOwnProperty(key)) {
+        if (key === "age" && Number.isNaN(Number.parseInt(updatedPetInfo[key]))) {
+          return next({statusCode: 400, message:"Bad Request"})
+        }
+        petToChange[key] = updatedPetInfo[key];
+      }
     }
 
-    if (name) {
-      petToChange.name = name;
-    }
-    if (age) {
-      petToChange.age = age;
-    }
-    if (kind) {
-      petToChange.kind = kind;
-    }
-
+    pets[id] = petToChange;
     const newPetsJSON = JSON.stringify(pets);
 
     fs.writeFile(petsPATH, newPetsJSON, (writeErr) => {
@@ -134,9 +121,7 @@ app.patch('/pets/:id', (req, res, next) => {
       };
 
       res.send(petToChange);
-    })
-
-
+    });
   });
 
 });
