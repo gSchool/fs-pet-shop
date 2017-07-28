@@ -6,10 +6,6 @@ let fs = require('fs');
 const morgan = require('morgan');
 const path = require('path');
 const petsPATH = path.join(__dirname, 'pets.json');
-const fs = require('fs');
-const morgan = require('morgan');
-const path = require('path');
-const petsPATH = path.join(__dirname, 'pets.json');
 
 const app = express();
 
