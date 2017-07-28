@@ -1,6 +1,6 @@
 'use strict';
 
-const fs = require('fs');
+let fs = require('fs');
 const http = require('http');
 const path = require('path');
 
@@ -55,3 +55,5 @@ const port = 8000;
 server.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
+
+module.exports = server;

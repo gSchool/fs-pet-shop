@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const fs = require('fs');
+let fs = require('fs');
 const morgan = require('morgan');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -10,8 +10,22 @@ const http = require('http');
 const app = express();
 const petsPATH = path.join(__dirname, 'pets.json');
 
+app.disable('x-powered-by');
 app.use(morgan('short'));
-app.use(bodyParser.json());
+app.use(function(req,res,next){
+  req.rawBody = '';
+  req.setEncoding('utf8');
+
+  req.on('data', function(chunk) {
+    req.rawBody += chunk;
+  });
+
+  req.on('end', function() {
+    if(req.rawBody.length > 0 ) req.body = JSON.parse(req.rawBody)
+    else req.body = {}
+    next();
+  });
+})
 
 // Create a new HTTP server
 app.get('/pets', (req, res) => {
