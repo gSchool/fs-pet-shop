@@ -2,11 +2,7 @@
 
 const bodyParser = require('body-parser');
 const express = require('express');
-<<<<<<< HEAD
 let fs = require('fs');
-=======
-const fs = require('fs');
->>>>>>> 3d55aafe1a43d6ff48996a885cb22aea8c2928a7
 const morgan = require('morgan');
 const path = require('path');
 const petsPATH = path.join(__dirname, 'pets.json');
@@ -39,11 +35,7 @@ app.get('/pets/:id', (req, res, next) => {
     const pets = JSON.parse(petsJSON);
     const pet = pets[id];
 
-<<<<<<< HEAD
     if (id < 0 || id >= pets.length || Number.isNaN(id) ) {
-=======
-    if (!id || id < 0 || id >= pets.length || Number.isNaN(id) ) {
->>>>>>> 3d55aafe1a43d6ff48996a885cb22aea8c2928a7
       res.status(404);
       return next(err);
     };
@@ -89,28 +81,17 @@ app.post('/pets', (req, res, next, err) => {
 });
 
 app.patch('/pets/:id', (req, res, next) => {
-<<<<<<< HEAD
   fs.readFile(petsPATH, 'utf8', (err, petsJSON) => {
     if (err) {
       return next({statusCode: 500, message:"There's been a server error."});
     };
 
     const id = Number.parseInt(req.params.id);
-=======
-  fs.readFile(petsPATH, 'utf8', (readErr, petsJSON) => {
-    if (readErr) {
-      res.status(500);
-      return next(err);
-    };
-
-    console.log("in patch readFile");
-    let id = Number.parseInt(req.params.id);
->>>>>>> 3d55aafe1a43d6ff48996a885cb22aea8c2928a7
     let pets = JSON.parse(petsJSON);
 
     if (id < 0 || id >= pets.length || Number.isNaN(id)) {
       res.status(404);
-<<<<<<< HEAD
+
       return next({statusCode:404, message: "Not Found"})
     }
     const updatedPetInfo = req.body;
@@ -132,40 +113,7 @@ app.patch('/pets/:id', (req, res, next) => {
     }
 
     pets[id] = petToChange;
-=======
-      return next(readErr)
-    }
 
-    const age = Number.parseInt(req.body.age);
-    const name = req.body.name;
-    const kind = req.body.kind;
-    const petToChange = pets[id];
-
-    console.log(age, name, kind);
-    console.log(Number.isNaN('tricky'));
-
-    if (age && Number.isNaN(age)) {
-      console.log("that's not a number of years");
-      res.status(404);
-      return next(readErr);
-    }
-
-    if (!name && !age && !kind) {
-      res.status(400);
-      return next(readErr)
-    }
-
-    if (name) {
-      petToChange.name = name;
-    }
-    if (age) {
-      petToChange.age = age;
-    }
-    if (kind) {
-      petToChange.kind = kind;
-    }
-
->>>>>>> 3d55aafe1a43d6ff48996a885cb22aea8c2928a7
     const newPetsJSON = JSON.stringify(pets);
 
     fs.writeFile(petsPATH, newPetsJSON, (writeErr) => {
@@ -175,13 +123,7 @@ app.patch('/pets/:id', (req, res, next) => {
       };
 
       res.send(petToChange);
-<<<<<<< HEAD
     });
-=======
-    })
-
-
->>>>>>> 3d55aafe1a43d6ff48996a885cb22aea8c2928a7
   });
 
 });
@@ -193,14 +135,9 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-<<<<<<< HEAD
   res.set({'Content-Type':'text/plain'})
   console.log(err);
   res.send(err.message)
-=======
-  console.log(err);
-  res.send(err)
->>>>>>> 3d55aafe1a43d6ff48996a885cb22aea8c2928a7
 });
 
 const port = process.env.port || 8000;
