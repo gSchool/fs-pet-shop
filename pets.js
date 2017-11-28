@@ -2,49 +2,35 @@
 
 const fs = require('fs');
 
-function read() {
-  fs.readFile('./pets.json', (err, data) => {
-    if (err) {
-      console.error(err);
-      process.exit(1);
+function read(data) {
+  const pets = JSON.parse(data);
+  if (process.argv[3]) {
+    if (process.argv[3] < pets.length && process.argv[3] >= 0) {
+      console.log(pets[process.argv[3]]);
     } else {
-      const pets = JSON.parse(data);
-      if (process.argv[3]) {
-        if (process.argv[3] < pets.length && process.argv[3] >= 0) {
-          console.log(pets[process.argv[3]]);
-        } else {
-          console.error('Usage: node pets.js read INDEX');
-          process.exit(1);
-        }
-      } else {
-        console.log(pets);
-      }
+      console.error('Usage: node pets.js read INDEX');
+      process.exit(1);
     }
-  });
+  } else {
+    console.log(pets);
+  }
 }
 
-function create() {
+function create(data) {
   if (process.argv.length === 6) {
-    fs.readFile('./pets.json', (err, data) => {
-      if (err) {
-        console.error(err);
+    const pet = {
+      age: Number.parseInt(process.argv[3]),
+      kind: process.argv[4],
+      name: process.argv[5],
+    };
+    const list = JSON.parse(data);
+    list.push(pet);
+    fs.writeFile('./pets.json', JSON.stringify(list), (error) => {
+      if (error) {
+        console.error(error);
         process.exit(1);
       } else {
-        const pet = {
-          age: Number.parseInt(process.argv[3]),
-          kind: process.argv[4],
-          name: process.argv[5],
-        };
-        const list = JSON.parse(data);
-        list.push(pet);
-        fs.writeFile('./pets.json', JSON.stringify(list), (error) => {
-          if (error) {
-            console.error(error);
-            process.exit(1);
-          } else {
-            console.log(pet);
-          }
-        });
+        console.log(pet);
       }
     });
   } else {
@@ -53,28 +39,21 @@ function create() {
   }
 }
 
-function update() {
+function update(data) {
   if (process.argv.length === 7) {
-    fs.readFile('./pets.json', (err, data) => {
-      if (err) {
-        console.error(err);
+    const pet = {
+      age: Number.parseInt(process.argv[4]),
+      kind: process.argv[5],
+      name: process.argv[6],
+    };
+    const list = JSON.parse(data);
+    list[process.argv[3]] = pet;
+    fs.writeFile('./pets.json', JSON.stringify(list), (error) => {
+      if (error) {
+        console.error(error);
         process.exit(1);
       } else {
-        const pet = {
-          age: Number.parseInt(process.argv[4]),
-          kind: process.argv[5],
-          name: process.argv[6],
-        };
-        const list = JSON.parse(data);
-        list[process.argv[3]] = pet;
-        fs.writeFile('./pets.json', JSON.stringify(list), (error) => {
-          if (error) {
-            console.error(error);
-            process.exit(1);
-          } else {
-            console.log(pet);
-          }
-        });
+        console.log(pet);
       }
     });
   } else {
@@ -83,23 +62,16 @@ function update() {
   }
 }
 
-function destroy() {
+function destroy(data) {
   if (process.argv.length === 4) {
-    fs.readFile('./pets.json', (err, data) => {
-      if (err) {
-        console.error(err);
+    const list = JSON.parse(data);
+    const pet = list.splice(process.argv[3], 1)[0];
+    fs.writeFile('./pets.json', JSON.stringify(list), (error) => {
+      if (error) {
+        console.error(error);
         process.exit(1);
       } else {
-        const list = JSON.parse(data);
-        const pet = list.splice(process.argv[3], 1)[0];
-        fs.writeFile('./pets.json', JSON.stringify(list), (error) => {
-          if (error) {
-            console.error(error);
-            process.exit(1);
-          } else {
-            console.log(pet);
-          }
-        });
+        console.log(pet);
       }
     });
   } else {
@@ -108,12 +80,19 @@ function destroy() {
   }
 }
 
-switch (process.argv[2]) {
-  case 'read': read(); break;
-  case 'create': create(); break;
-  case 'update': update(); break;
-  case 'destroy': destroy(); break;
-  default:
-    console.error('Usage: node pets.js [read | create | update | destroy]');
+fs.readFile('./pets.json', (err, data) => {
+  if (err) {
+    console.error(err);
     process.exit(1);
-}
+  } else {
+    switch (process.argv[2]) {
+      case 'read': read(data); break;
+      case 'create': create(data); break;
+      case 'update': update(data); break;
+      case 'destroy': destroy(data); break;
+      default:
+        console.error('Usage: node pets.js [read | create | update | destroy]');
+        process.exit(1);
+    }
+  }
+});

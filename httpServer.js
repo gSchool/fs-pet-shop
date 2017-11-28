@@ -22,7 +22,7 @@ function read(req, res, index) {
         }
       } else {
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.write(JSON.stringify(data));
+        res.write(JSON.stringify(pets));
       }
     }
     readCounts--;
@@ -44,7 +44,7 @@ function create(req, res) {
     } catch (e) {
       console.error(e);
       res.writeHead(500, { 'Content-Type': 'text/plain' });
-      res.end('File Read Error');
+      res.end('File Write Error');
       process.exit(1);
     }
     if (pet && pet.hasOwnProperty('name') && pet.hasOwnProperty('age') && pet.hasOwnProperty('kind')) {
