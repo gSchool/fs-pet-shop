@@ -74,7 +74,6 @@ function create(req, res) {
   });
 }
 
-
 const server = http.createServer((req, res) => {
   const route = req.url.split('/');
   route.splice(0, 1);
