@@ -91,4 +91,6 @@ const server = http.createServer((req, res) => {
   }
 });
 
+module.exports = server;
+
 server.listen(3000);
