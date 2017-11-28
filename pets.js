@@ -1,11 +1,16 @@
 #!/usr/local/bin/node
 
-if (!process.argv[2]) {
-  console.error('Usage: node pets.js [read | create | update | destroy]');
-  process.exit(1);
+switch(process.argv[2]) {
+  case 'read' : read(); break;
+  case 'create' : create(); break;
+  case 'update' : update(); break;
+  case 'destroy' : destroy(); break;
+  default :
+    console.error('Usage: node pets.js [read | create | update | destroy]');
+    process.exit(1);
 }
 
-if (process.argv[2] === 'read') {
+function read() {
   require('fs').readFile('./pets.json', (err, data) => {
     if (err) {
       console.error(err);
@@ -26,7 +31,7 @@ if (process.argv[2] === 'read') {
   });
 }
 
-if (process.argv[2] === 'create') {
+function create() {
   if (process.argv.length === 6) {
     require('fs').readFile('./pets.json', (err, data) => {
       if (err) {
@@ -55,8 +60,7 @@ if (process.argv[2] === 'create') {
     process.exit(1);
   }
 }
-
-if (process.argv[2] === 'update') {
+function update() {
   if (process.argv.length === 7) {
     require('fs').readFile('./pets.json', (err, data) => {
       if (err) {
@@ -85,8 +89,7 @@ if (process.argv[2] === 'update') {
     process.exit(1);
   }
 }
-
-if (process.argv[2] === 'destroy') {
+function destroy() {
   if (process.argv.length === 4) {
     require('fs').readFile('./pets.json', (err, data) => {
       if (err) {
