@@ -47,7 +47,7 @@ function create(req, res) {
       res.end('File Write Error');
       process.exit(1);
     }
-    if (pet && pet.hasOwnProperty('name') && pet.hasOwnProperty('age') && pet.hasOwnProperty('kind')) {
+    if (!isNaN(pet.age) && pet.name && pet.kind) {
       fs.readFile('./pets.json', (err, data) => {
         if (err) {
           res.writeHead(500, { 'Content-Type': 'text/plain' });
@@ -60,6 +60,7 @@ function create(req, res) {
               res.writeHead(500, { 'Content-Type': 'text/plain' });
               res.end('File Write Error');
             } else {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
               res.write(JSON.stringify(pet));
               res.end();
             }
@@ -67,8 +68,8 @@ function create(req, res) {
         }
       });
     } else {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('Not Found');
+      res.writeHead(400, { 'Content-Type': 'text/plain' });
+      res.end('Bad Request');
     }
   });
 }
