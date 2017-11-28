@@ -2,15 +2,13 @@ const http = require('http');
 
 const server = http.createServer((req, res) => {
   if (req.method === 'GET') {
-    read(req, res);
-    read(req, res, 1);
-    read(req, res, 0);
+      read(req, res, req.url.split('/')[2]);
   }
 });
 
 let readCounts = 0;
 
-function read(req, res, i) {
+function read(req, res, index) {
   readCounts++;
   require('fs').readFile('./pets.json', (err, data) => {
     if (err) {
@@ -18,9 +16,9 @@ function read(req, res, i) {
       process.exit(1);
     } else {
       data = JSON.parse(data);
-      if (process.argv[3]) {
-        if (process.argv[3] < data.length && process.argv[3] >= 0) {
-          res.write(JSON.stringify(data[process.argv[3]]));
+      if (index) {
+        if (index < data.length && index >= 0) {
+          res.write(JSON.stringify(data[index]));
         } else {
           console.error('Usage: node pets.js read INDEX');
           process.exit(1);
