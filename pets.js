@@ -60,6 +60,7 @@ function create() {
     process.exit(1);
   }
 }
+
 function update() {
   if (process.argv.length === 7) {
     require('fs').readFile('./pets.json', (err, data) => {
@@ -89,6 +90,7 @@ function update() {
     process.exit(1);
   }
 }
+
 function destroy() {
   if (process.argv.length === 4) {
     require('fs').readFile('./pets.json', (err, data) => {
