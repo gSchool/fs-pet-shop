@@ -113,7 +113,7 @@ app.patch('/pets/:id', (req, res) => {
       }
       const pet = pets[id];
       const keys = Object.keys(patch);
-      for (let i = 0; i < keys; i++) {
+      for (let i = 0; i < keys.length; i++) {
         switch (keys[i]) {
           case 'name':
             pet.name = patch.name;
