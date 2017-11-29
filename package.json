@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/gSchool/fs-pet-shop#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "eslint-config-airbnb": "^16.1.0",
     "express": "^4.16.2",
     "morgan": "^1.9.0",

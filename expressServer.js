@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+
 const app = express();
 const port = process.env.PORT || 8000;
 
@@ -11,7 +12,7 @@ app.get('/pets', (req, res) => {
     } else {
       try {
         res.send(JSON.parse(data));
-      } catch (e){
+      } catch (e) {
         res.sendStatus(500);
       }
     }
@@ -23,7 +24,7 @@ app.get('/pets/:id', (req, res) => {
     if (err) {
       res.sendStatus(500);
     } else {
-      let id = Number.parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       let pets;
       try {
         pets = JSON.parse(data);
@@ -36,7 +37,7 @@ app.get('/pets/:id', (req, res) => {
         res.sendStatus(404);
       }
     }
-  })
+  });
 });
 
 app.use(bodyParser.json());
@@ -52,11 +53,11 @@ app.post('/pets', (req, res) => {
       } catch (e) {
         res.sendStatus(500);
       }
-      let pet = req.body;
-      if (!isNaN(pet.age) && pet.name && pet.kind) {
+      const pet = req.body;
+      if (!Number.isNaN(pet.age) && pet.name && pet.kind) {
         pets.push(pet);
-        fs.writeFile('./pets.json', JSON.stringify(pets), (err) => {
-          if (err) {
+        fs.writeFile('./pets.json', JSON.stringify(pets), (error) => {
+          if (error) {
             res.sendStatus(500);
           } else {
             res.send(req.body);
@@ -74,7 +75,7 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("listening on port " + port);
+  console.log(`listening on port ${port}`);
 });
 
 module.exports = app;

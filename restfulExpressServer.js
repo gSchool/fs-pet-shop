@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+
 const app = express();
 const port = process.env.PORT || 8000;
 
@@ -13,7 +14,7 @@ app.get('/pets', (req, res) => {
     } else {
       try {
         res.send(JSON.parse(data));
-      } catch (e){
+      } catch (e) {
         res.sendStatus(500);
       }
     }
@@ -25,7 +26,7 @@ app.get('/pets/:id', (req, res) => {
     if (err) {
       res.sendStatus(500);
     } else {
-      let id = Number.parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       let pets;
       try {
         pets = JSON.parse(data);
@@ -53,10 +54,10 @@ app.post('/pets', (req, res) => {
         res.sendStatus(500);
       }
       const pet = req.body;
-      if (!isNaN(pet.age) && pet.name && pet.kind) {
+      if (!Number.isNaN(pet.age) && pet.name && pet.kind) {
         pets.push(pet);
-        fs.writeFile('./pets.json', JSON.stringify(pets), (err) => {
-          if (err) {
+        fs.writeFile('./pets.json', JSON.stringify(pets), (error) => {
+          if (error) {
             res.sendStatus(500);
           } else {
             res.send(req.body);
@@ -78,13 +79,13 @@ app.delete('/pets/:id', (req, res) => {
       let pets;
       try {
         pets = JSON.parse(data);
-      } catch(e) {
+      } catch (e) {
         res.sendStatus(500);
       }
       if (id >= 0 && id < pets.length) {
-        let pet = pets.splice(id, 1)[0];
-        fs.writeFile('./pets.json', JSON.stringify(pets), (err) => {
-          if (err) {
+        const pet = pets.splice(id, 1)[0];
+        fs.writeFile('./pets.json', JSON.stringify(pets), (error) => {
+          if (error) {
             res.sendStatus(500);
           } else {
             res.send(pet);
@@ -111,8 +112,9 @@ app.patch('/pets/:id', (req, res) => {
         res.sendStatus(500);
       }
       const pet = pets[id];
-      for (let key in patch) {
-        switch (key) {
+      const keys = Object.keys(patch);
+      for (let i = 0; i < keys; i++) {
+        switch (keys[i]) {
           case 'name':
             pet.name = patch.name;
             break;
@@ -120,7 +122,7 @@ app.patch('/pets/:id', (req, res) => {
             pet.kind = patch.kind;
             break;
           case 'age':
-            if (!isNaN(Number.parseInt(patch.age))) {
+            if (!Number.isNaN(Number.parseInt(patch.age))) {
               pet.age = patch.age;
             } else {
               res.sendStatus(400);
@@ -130,25 +132,23 @@ app.patch('/pets/:id', (req, res) => {
         }
       }
       pets[id] = pet;
-      fs.writeFile('./pets.json', JSON.stringify(pets), (err) => {
-        if (err) {
+      fs.writeFile('./pets.json', JSON.stringify(pets), (error) => {
+        if (error) {
           res.sendStatus(500);
         } else {
           res.send(pet);
         }
-      })
+      });
     }
   });
 });
-
-
 
 app.use((req, res) => {
   res.sendStatus(404);
 });
 
 app.listen(port, () => {
-  console.log("listening on port " + port);
+  console.log(`listening on port ${port}`);
 });
 
 module.exports = app;
