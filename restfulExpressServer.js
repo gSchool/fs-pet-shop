@@ -1,11 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const basicauth = require('basicauth-middleware')
 
 const app = express();
 const port = process.env.PORT || 8000;
 
 app.use(bodyParser.json());
+app.use(basicauth('admin', 'meowmix', '"Required"'));
 
 app.get('/pets', (req, res) => {
   fs.readFile('./pets.json', (err, data) => {
@@ -111,34 +113,38 @@ app.patch('/pets/:id', (req, res) => {
       } catch (e) {
         res.sendStatus(500);
       }
-      const pet = pets[id];
-      const keys = Object.keys(patch);
-      for (let i = 0; i < keys.length; i++) {
-        switch (keys[i]) {
-          case 'name':
-            pet.name = patch.name;
-            break;
-          case 'kind':
-            pet.kind = patch.kind;
-            break;
-          case 'age':
-            if (!Number.isNaN(Number.parseInt(patch.age))) {
-              pet.age = patch.age;
-            } else {
-              res.sendStatus(400);
-            }
-            break;
-          default: res.sendStatus(400);
+      if (id >= 0 && id < pets.length) {
+        const pet = pets[id];
+        const keys = Object.keys(patch);
+        for (let i = 0; i < keys.length; i++) {
+          switch (keys[i]) {
+            case 'name':
+              pet.name = patch.name;
+              break;
+            case 'kind':
+              pet.kind = patch.kind;
+              break;
+            case 'age':
+              if (!Number.isNaN(Number.parseInt(patch.age))) {
+                pet.age = patch.age;
+              } else {
+                res.sendStatus(400);
+              }
+              break;
+            default: res.sendStatus(400);
+          }
         }
+        pets[id] = pet;
+        fs.writeFile('./pets.json', JSON.stringify(pets), (error) => {
+          if (error) {
+            res.sendStatus(500);
+          } else {
+            res.send(pet);
+          }
+        });
+      } else {
+        res.sendStatus(400);
       }
-      pets[id] = pet;
-      fs.writeFile('./pets.json', JSON.stringify(pets), (error) => {
-        if (error) {
-          res.sendStatus(500);
-        } else {
-          res.send(pet);
-        }
-      });
     }
   });
 });
