@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const basicauth = require('basicauth-middleware')
+const basicauth = require('basicauth-middleware');
 
 const app = express();
 const port = process.env.PORT || 8000;
