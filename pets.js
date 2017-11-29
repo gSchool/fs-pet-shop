@@ -25,7 +25,7 @@ switch (process.argv[2].toUpperCase()) {
     });
     break;
 
-  case "CREATE" :
+  case 'CREATE' :
     fs.readFile('./pets.json', 'utf8', (err, data) => {
       if (err) throw err;
       petArr = JSON.parse(data);
@@ -36,7 +36,7 @@ switch (process.argv[2].toUpperCase()) {
         let petObj = {};
         petObj.age = parseInt(process.argv[3]);
         petObj.kind = process.argv[4];
-        petObj.name = process.argv[5]
+        petObj.name = process.argv[5];
         petArr.push(petObj);
         output = JSON.stringify(petArr);
         fs.writeFile('./pets.json', output, (err) => {
@@ -47,15 +47,25 @@ switch (process.argv[2].toUpperCase()) {
     });
     break;
 
-    case "UPDATE" :
+    case 'UPDATE' :
       fs.readFile('./pets.json', 'utf8', (err, data) => {
         if (err) throw err;
         petArr = JSON.parse(data);
         if ((!process.argv[3]) || (!process.argv[4]) || (!process.argv[5]) || (!process.argv[6])) {
           console.error('Usage: node pets.js update INDEX AGE KIND NAME');
           process.exit(1);
+        } else {
+          petArr[process.argv[3]].age = parseInt(process.argv[4]);
+          petArr[process.argv[3]].kind = process.argv[5];
+          petArr[process.argv[3]].name = process.argv[6];
+          output = JSON.stringify(petArr);
+          fs.writeFile('./pets.json', output, (err) => {
+            if (err) throw err;
+            console.log(petArr[process.argv[3]]);
+          });
         }
       });
       break;
 
+    case 'DESTROY'
 }
