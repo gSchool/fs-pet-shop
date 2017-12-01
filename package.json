@@ -27,6 +27,7 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "morgan": "^1.9.0",
     "nodemon": "^1.9.1"
   },
   "devDependencies": {
@@ -38,5 +39,8 @@
     "mocha": "^3.0.2",
     "rewire": "^2.5.2",
     "supertest": "^2.0.0"
+  },
+  "directories": {
+    "test": "test"
   }
 }

@@ -1,22 +1,18 @@
-const fs = require('fs');
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser')
-const port = process.env.PORT || 8888;
+let fs = require('fs');
+let express = require('express');
+let router = express.Router();
+let bodyParser = require('body-parser');
+let port = process.env.PORT || 8888;
 
 let petObj = {};
 
-app.disable('x-powered-by');
-app.use(bodyParser.json());
-
-const filterInt = function(value) {
+let filterInt = function(value) {
     if (/^(\-|\+)?([0-9]+|Infinity)$/.test(value))
       return Number(value);
     return NaN;
   };
 
-
-app.get('/pets', (req, res) => {
+router.get('/', (req, res) => {
   fs.readFile('./pets.json', 'utf8', (err, data) => {
     if (err) throw err;
     petArr = JSON.parse(data);
@@ -25,8 +21,7 @@ app.get('/pets', (req, res) => {
   });
 });
 
-
-app.get('/pets/:id', (req, res) => {
+router.get('/:id', (req, res) => {
   let indexSpot = filterInt(req.params.id);
   if (!isNaN(indexSpot)) {
     fs.readFile('./pets.json', 'utf8', (err, data) => {
@@ -45,7 +40,7 @@ app.get('/pets/:id', (req, res) => {
   }
 });
 
-app.post('/pets/', (req, res) => {
+router.post('/', (req, res) => {
   petObj = req.body;
   console.log(petObj);
   let age = filterInt(req.body.age);
@@ -68,12 +63,6 @@ app.post('/pets/', (req, res) => {
   }
 });
 
-app.use((req, res) => {
-  res.sendStatus(404);
-});
 
-app.listen(port, () => {
-  console.log('Listening on port', port);
-});
 
-module.exports = app;
+module.exports = router;
