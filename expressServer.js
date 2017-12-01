@@ -1,11 +1,20 @@
 const fs = require('fs');
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser')
 const port = process.env.PORT || 8888;
 
 let petObj = {};
 
 app.disable('x-powered-by');
+app.use(bodyParser.json());
+
+var filterInt = function(value) {
+    if (/^(\-|\+)?([0-9]+|Infinity)$/.test(value))
+      return Number(value);
+    return NaN;
+  };
+
 
 app.get('/pets', (req, res) => {
   fs.readFile('./pets.json', 'utf8', (err, data) => {
@@ -18,26 +27,44 @@ app.get('/pets', (req, res) => {
 
 
 app.get('/pets/:id', (req, res) => {
-  var filterInt = function(value) {
-  if (/^(\-|\+)?([0-9]+|Infinity)$/.test(value))
-    return Number(value);
-  return NaN;
-  }
   let indexSpot = filterInt(req.params.id);
-  console.log(isNaN(indexSpot));
   if (!isNaN(indexSpot)) {
     fs.readFile('./pets.json', 'utf8', (err, data) => {
-      if (err) {res.sendStatus(500)};
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      };
       petArr = JSON.parse(data);
       if (indexSpot<0 || indexSpot>=petArr.length) {
         res.sendStatus(404);
       } else {
         petObj = petArr[indexSpot];
-        console.log(petObj);
-//        res.type('application/json');
         res.send(petObj);
       }
     });
+  }
+});
+
+app.post('/pets/', (req, res) => {
+  petObj = req.body;
+  console.log(petObj);
+  let age = filterInt(req.body.age);
+  if (!isNaN(age) && (req.body.name) && (req.body.kind)) {
+    fs.readFile('./pets.json', 'utf8', (err, data) => {
+      if (err) {res.sendStatus(500)};
+      petArr = JSON.parse(data);
+      petArr.push(petObj);
+      let output = JSON.stringify(petArr);
+      fs.writeFile('./pets.json', output, (err) => {
+        if (err) {
+          console.error(err);
+          res.sendStatus(500);
+        };
+        res.send(petObj);
+      });
+    });
+  } else {
+    res.sendStatus(400);
   }
 });
 
