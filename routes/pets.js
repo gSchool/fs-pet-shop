@@ -1,8 +1,6 @@
 let fs = require('fs');
 let express = require('express');
 let router = express.Router();
-let bodyParser = require('body-parser');
-let port = process.env.PORT || 8888;
 
 let petObj = {};
 
@@ -57,6 +55,75 @@ router.post('/', (req, res) => {
         };
         res.send(petObj);
       });
+    });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+router.patch('/:index', (req, res) => {
+  let indexSpot = filterInt(req.params.index);
+  petObj = req.body;
+  if (!isNaN(indexSpot)) {
+    fs.readFile('./pets.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      };
+      petArr = JSON.parse(data);
+      if (indexSpot<0 || indexSpot>=petArr.length) {
+        res.sendStatus(400);
+      } else {
+        if (petObj.age) {
+          let ageSpot = filterInt(petObj.age);
+          if (!isNaN(ageSpot)) {
+            petArr[indexSpot].age = ageSpot;
+          } else {
+            console.log('The age failed.');
+            res.sendStatus(400);
+          }
+        };
+        if (petObj.name) {petArr[indexSpot].name = petObj.name};
+        if (petObj.kind) {petArr[indexSpot].kind = petObj.kind};
+        let output = JSON.stringify(petArr);
+        fs.writeFile('./pets.json', output, (err) => {
+          if (err) {
+            console.error(err);
+            res.sendStatus(500);
+          };
+          res.send(petArr[indexSpot]);
+        });
+      }
+    });
+  } else {
+    console.log("The index failed.", )
+    res.sendStatus(400);
+  }
+});
+
+router.delete('/:index', (req, res) => {
+  let indexSpot = filterInt(req.params.index);
+  if (!isNaN(indexSpot)) {
+    fs.readFile('./pets.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        res.sendStatus(500);
+      };
+      petArr = JSON.parse(data);
+      if (indexSpot<0 || indexSpot>=petArr.length) {
+        res.sendStatus(400);
+      } else {
+        petObj = petArr[indexSpot];
+        petArr.splice(indexSpot, 1);
+        let output = JSON.stringify(petArr);
+        fs.writeFile('./pets.json', output, (err) => {
+          if (err) {
+            console.error(err);
+            res.sendStatus(500);
+          };
+          res.send(petObj);
+        });
+      }
     });
   } else {
     res.sendStatus(400);
