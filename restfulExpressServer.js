@@ -8,7 +8,6 @@ let petsRoute = require('./routes/pets.js');
 let port = process.env.PORT || 8888;
 
 app.use((req, res, next) => {
-  console.log(req.headers);
   if (req.headers.authorization === 'Basic YWRtaW46bWVvd21peA==') {
     next();
   } else {
