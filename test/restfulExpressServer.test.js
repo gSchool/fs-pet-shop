@@ -173,8 +173,8 @@ describe('pets restfulExpressServer', () => {
         .expect('Content-type', /json/)
         .expect(200, {
           age: 3,
-          kind: 'duck',
-          name: 'Bob'
+          kind: 'owl',
+          name: 'Hugo'
         }, (err, _res) => {
           if (err) {
             return done(err);
@@ -186,8 +186,8 @@ describe('pets restfulExpressServer', () => {
             .expect('Content-Type', /json/)
             .expect(200, {
               age: 3,
-              kind: 'duck',
-              name: 'Bob'
+              kind: 'owl',
+              name: 'Hugo'
             }, done);
         });
     });
@@ -200,16 +200,16 @@ describe('pets restfulExpressServer', () => {
         .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
         .expect('Content-type', /json/)
         .expect(200, {
-          age: 4,
-          kind: 'duck',
-          name: 'Bob'
+          age: 3,
+          kind: 'owl',
+          name: 'Hugo'
         }, (err, _res) => {
           if (err) {
             return done(err);
           }
 
           request(app)
-            .get('/pets/1')
+            .get('/pets/2')
             .set('Authorization', 'Basic YWRtaW46bWVvd21peA==')
             .expect('Content-Type', /text\/plain/)
             .expect(404, 'Not Found', done);
