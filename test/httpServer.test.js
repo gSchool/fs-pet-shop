@@ -6,7 +6,7 @@ const request = require('supertest');
 // Set the port to a different number so that it does not conflict with the
 // other test files.
 process.env.PORT = 3001;
-const app = rewire('../httpServer');
+const app = rewire('../httpServer.js');
 
 describe('pets httpServer', () => {
   beforeEach(() => {
