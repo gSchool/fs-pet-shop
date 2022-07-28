@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "name": "fs-pet-store",
   "version": "0.1.0",
   "description": "A small server app to demonstrate CRUD over an HTTP API",
@@ -32,5 +33,9 @@
     "mocha": "^3.0.2",
     "rewire": "^2.5.2",
     "supertest": "^2.0.0"
+=======
+  "dependencies": {
+    "nodemon": "^2.0.19"
+>>>>>>> Stashed changes
   }
 }
