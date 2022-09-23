@@ -36,10 +36,6 @@ app.post('/pets', function(req, res) {
     fs.readFile('pets.json', 'utf8', function(error, data){
         if(error){
             console.error(new Error('Whoops, something bad happened'))
-        } else if (typeof petIndex != 'number' || petData[petIndex] == undefined){
-            res.statusCode = 404
-            res.setHeader('Content-Type', 'text/plain');
-            res.end('Not found');
         } else {
             let petData = JSON.parse(data)
             petData.push(newData)
