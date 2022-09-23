@@ -19,7 +19,7 @@ const server = http.createServer(function(req, res) {
         } else if (req.url.charAt(5) == '/'){
             let index = req.url.substring(6)
             let petData = JSON.parse(data)
-            if(petData[iexnd] === undefined){
+            if(petData[index] === undefined){
                 res.statusCode = 404
                 res.setHeader('Content-Type', 'text/plain');
                 res.end('Not found');
