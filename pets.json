@@ -1,1 +1,1 @@
-[{"age":7,"kind":"rainbow","name":"fido"},{"age":5,"kind":"snake","name":"Buttons"}]
+[{"age":7,"kind":"rainbow","name":"fido"},{"age":5,"kind":"snake","name":"Buttons"},{"age":"3","kind":"dog","name":"fluffy"},{"age":"4","kind":"ferret","name":"sparky"},{"age":"8","kind":"horse","name":"thunder"},{"age":"9","kind":"turtle","name":"slowboy"},{"age":"parseInt(15)","kind":"turtle","name":"superslow"},{"age":15,"kind":"turtle","name":"superslow"}]
