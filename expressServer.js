@@ -5,31 +5,30 @@ app.use(express.json());
 const port = process.env.PORT || 8000;
 
 app.get('/pets', function(req, res) {
-        fs.readFile('pets.json', 'utf8', function(error, data){
-            if(error){
-                console.error(new Error('Whoops, something bad happened'))
-            } 
-            else{
-                res.status(200)
-                res.setHeader('Content-Type', 'text/plain');
-                res.write(data)
-                res.end()
-            }
-        })
-})
-
-
-app.get('/pets/:index', function(req, res){
     fs.readFile('pets.json', 'utf8', function(error, data){
         if(error){
             console.error(new Error('Whoops, something bad happened'))
-        } else {
-            let petData = JSON.parse(data)
-            let petIndex = req.params['index']
-            res.write(JSON.stringify(petData[petIndex]))}
-            res.end();
+        } 
+        else{
+            res.setHeader('Content-Type', 'text/plain');
+            res.write(data)
+            res.end()
+        }
     })
 })
+
+app.get('/pets/:index', function(req, res){
+fs.readFile('pets.json', 'utf8', function(error, data){
+    if(error){
+        console.error(new Error('Whoops, something bad happened'))
+    } else {
+        let petData = JSON.parse(data)
+        let petIndex = req.params['index']
+        res.write(JSON.stringify(petData[petIndex]))}
+        res.end();
+})
+})
+
 
 app.post('/pets', function(req, res) {
     console.log(req.body)
