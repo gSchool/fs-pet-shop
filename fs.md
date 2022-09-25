@@ -39,7 +39,7 @@ Your first task is to build a command-line application that displays its usage, 
 
 ```shell
 $ node pets.js
-Usage: node pets.js [read | create | update | destroy]
+Usage: node pets.js [read | create |  update | destroy]
 ```
 
 Your next task is to refactor the application to handle the `read` subcommand via the [process arguments]['argv'], read the `pets.json` file, parse its data to a native JavaScript object, and log it to the console. If the call to the filesystem fails for any reason, it should throw the resulting error.
