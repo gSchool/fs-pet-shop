@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 let fs = require('fs');
 app.use(express.json());
-const port = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8000;
 
 app.get('/pets', function(req, res) {
     fs.readFile('pets.json', 'utf8', function(error, data){
@@ -52,5 +52,5 @@ app.post('/pets', function(req, res) {
 })
 
 app.listen(port, function() {
-    console.log('Server is running', port);
+    console.log('Server is running', PORT);
 });

@@ -38,3 +38,18 @@ if (command == 'read'){
 }
 
 // console.log('Usage: node pets.js [read | create | update | destroy]')
+
+fs.readFile('./dogs,txt', 'utf8', function(error, data){
+    if (error){
+        console.log(error)
+    } else {
+    newString = data + addString
+    fs.writeFile('./dogs,txt', newString, function(error) {
+        if(error) {
+            console.log(error)
+        } else {
+            console.log(`Successfully added string!`)
+    }
+})
+}
+})
