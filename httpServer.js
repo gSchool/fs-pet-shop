@@ -2,6 +2,7 @@ const fs = require('fs');
 const http = require('http');
 const petRegExp = /^\/pets\/(.*)$/;
 const port = 8000;
+console.log(port);
 
 const server = http.createServer((req, res) => {
     const URL = req.url
