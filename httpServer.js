@@ -16,8 +16,8 @@ const server = http.createServer((req, res) => {
         let allPets = JSON.parse(data);
         let allPetsJSON = JSON.stringify(allPets);
         if (err){
-            
-        } else if (urlPetInt) {
+            errorFound();
+        } else if (urlPetNumber) {
             singlePet(urlPetInt);
         } else if (URL == '/pets') {
             getAll();
@@ -39,7 +39,7 @@ const server = http.createServer((req, res) => {
         }
         
         function singlePet(num) {
-            if (!allPets[urlPetInt]){
+            if (!allPets[num]){
             res.statusCode = 404;
             res.setHeader('Content-Type', 'text/plain')
             res.end('Not Found');
@@ -47,8 +47,8 @@ const server = http.createServer((req, res) => {
             } else {
                 res.setHeader('Content-Type', 'application/json');
                 res.statusCode = 200;
-                res.end(JSON.stringify(allPets[urlPetInt]));
-                return;
+                res.end(JSON.stringify(allPets[num]));
+                //return;
             }
         }
     })
