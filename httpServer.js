@@ -1,6 +1,6 @@
 const fs = require('fs');
 const http = require('http');
-
+const petRegExp = /^\/pets\/(.*)$/;
 const port = 8000;
 
 const server = http.createServer((req, res) => {
@@ -15,16 +15,21 @@ const server = http.createServer((req, res) => {
         let allPets = JSON.parse(data);
         let allPetsJSON = JSON.stringify(allPets);
         if (err){
-            res.statusCode = 404;
-            res.setHeader('Content-Type', 'text/plain')
-            res.end('Internal server error');
-            return;
+            
         } else if (urlPetInt) {
             singlePet(urlPetInt);
         } else if (URL == '/pets') {
             getAll();
         }
+
         
+        function errorFound() {
+            res.statusCode = 404;
+            res.setHeader('Content-Type', 'text/plain')
+            res.end('Internal server error');
+            return;
+        }
+
         function getAll() {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
