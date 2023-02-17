@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const port = 8000;
+app.use(express.json());
 
 app.get('/pets', (req,res,next)=>{
     console.log(req.method);
@@ -18,6 +19,7 @@ app.get('/pets', (req,res,next)=>{
 app.get('/pets/:id/', (req,res,next)=>{
     console.log(req.method);
     const id = parseInt(req.params.id);
+    console.log(`Request for pets at /${id}`)
     fs.readFile('./pets.json', (err,data)=>{
         const allPets=JSON.parse(data);
         if (!allPets[id]) {
@@ -28,7 +30,29 @@ app.get('/pets/:id/', (req,res,next)=>{
     })
 })
 
+app.post('/pets', (req,res)=>{
+    console.log(req.method);
+    let newPet = req.body;
+    console.log(newPet);
+    fs.readFile('./pets.json', (err,data)=>{
+        if (err){
+            next(err);
+        } else {
+            let allPets = JSON.parse(data);
+            allPets.push(newPet);
+            fs.writeFile('./pets.json', JSON.stringify(allPets), (err)=>{
+                if (err) {
+                    next(err);
+                } else {
+                    res.send(`New pet added: ${JSON.stringify(newPet)}`);
+                }
+            })
+        }        
+    })   
+})
+
 app.use((err,req,res,next)=>{
+    console.log('Error sent to middleware')
     console.error(err.stack);
     res.status(404).send('Not Found');
 })
