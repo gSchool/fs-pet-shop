@@ -1,6 +1,7 @@
 const fs = require('fs');
 const http = require('http');
 const petRegExp = /^\/pets\/(.*)$/;
+
 const port = 8000;
 console.log(port);
 
@@ -9,17 +10,21 @@ const server = http.createServer((req, res) => {
     console.log(URL);
     const method = req.method
     console.log(method);
+    console.log(petRegExp.test(URL))
     let urlArray = URL.split('/');
     let urlPetNumber = urlArray[2];
     let urlPetInt = parseInt(urlPetNumber);
     fs.readFile('pets.json', 'utf8', function(err, data){
+        if (petRegExp.test(URL) === false) {
+            errorFound();
+        }
         let allPets = JSON.parse(data);
         let allPetsJSON = JSON.stringify(allPets);
         if (err){
             errorFound();
         } else if (urlPetNumber) {
             singlePet(urlPetInt);
-        } else if (URL == '/pets') {
+        } else {
             getAll();
         }
 
@@ -48,7 +53,7 @@ const server = http.createServer((req, res) => {
                 res.setHeader('Content-Type', 'application/json');
                 res.statusCode = 200;
                 res.end(JSON.stringify(allPets[num]));
-                //return;
+                return;
             }
         }
     })
