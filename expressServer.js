@@ -59,7 +59,7 @@ app.use((err,req,res,next)=>{
     console.log('Error sent to middleware')
     console.error(err.stack);
     res.status(404).send('Not Found');
-
+})
 
 app.listen(port, ()=>{
     console.log(`Server is listening on ${port}`);
