@@ -1,0 +1,38 @@
+version: '3'
+
+# Each service runs in a separate container
+services:
+    # the name of the service
+    postgres-db:
+        container_name: postgres-db
+        image: postgres:latest
+        restart: always
+        environment:
+            DATABASE_HOST: 127.0.0.1
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: mcsp19
+            POSTGRES_PORT: 5432
+            POSTGRES_DB: petshop
+            PGDATA: /var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+
+
+    pgadmin:
+        image: dpage/pgadmin4:latest
+        container_name: pgAdmin
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: da.ortiz83@gmail.com
+            PGADMIN_DEFAULT_PASSWORD: notyou
+        ports:
+            - "8080:80"
+        volumes:
+            - pgadmin-data:/var/lib/pgadmin
+        depends_on:
+            - postgres-db
+
+        
+volumes:
+  pgdatasource:
+  pgadmin-data:
