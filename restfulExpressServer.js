@@ -1,8 +1,6 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
-// const path = require('path');
-// const petsPath = path.join(__dirname, 'pets.json');
 const { Pool } = require('pg')
 const port = 8000;
 app.use(express.json());
@@ -27,14 +25,6 @@ app.get('/pets', (req,res,next)=>{
         let rows = result.rows;
         res.status(200).send(rows);
     })
-    // fs.readFile(petsPath, (err,data)=>{                  ***Code from when the DB was in a JSON file***
-    //     if (err){
-    //         next(err);
-    //     }
-    //     const allPets=JSON.parse(data);
-    //     res.status(200);
-    //     res.send(allPets);
-    // })
 })
 
 // If GET request to specific pet id at that path, returns info about that pet
@@ -47,6 +37,7 @@ app.get('/pets/:id/', (req,res,next)=>{
             return next(err);
         }
         let pet = result.rows[0];
+        // checks if pet is in the DB before sending response
         if (pet){
             console.log(pet);
             res.status(200).send(pet);
@@ -55,31 +46,16 @@ app.get('/pets/:id/', (req,res,next)=>{
             res.status(404).send('Pet not found');
         }
     })
-
-    // fs.readFile(petsPath, (err,data)=>{                  ***Code from when the DB was in a JSON file***
-    //     const allPets=JSON.parse(data);
-    //     if (!allPets[id]) {
-    //         console.log('DELETE error, doesn\'t exist');
-    //         return res.status(404).send('Not Found');
-    //     } else {
-    //         res.status(200);
-    //         res.send(allPets[id]);
-    //     }
-    // })
 })
 
-// app.use((err,req,res,next)=>{                            ***Code from when the DB was in a JSON file***
-//     console.log('GET error sent to middleware')
-//     console.error(err.stack);
-//     res.status(404).send('Not Found');
-// })
 
 
-// If POST request to /pets, takes the request in and adds the information to the pets.json file
+// If POST request to /pets, takes the request in and adds the information to the DB
 app.post('/pets', (req,res, next)=>{
     console.log(req.method);
     const age = parseInt(req.body.age);
     const { kind, name } = req.body;
+    // checks for missing information in request and if the age is a number
     if (!age || !kind || !name || Number.isNaN(age)) {
         console.log('Error: Input missing information');
         return res.status(400).send('Error: Input missing information');
@@ -88,98 +64,61 @@ app.post('/pets', (req,res, next)=>{
             if (err){
                 return next(err);
             }
-            let petInfo = result.rows;
+            let petInfo = result.rows[0];
             console.log('Added: ' + petInfo);
             res.status(200).send(petInfo);
         })
-    }
-
-    // fs.readFile(petsPath, (err,data)=>{                  ***Code from when the DB was in a JSON file***
-    //     if (err){
-    //         next(err);
-    //     } else {
-    //         if (!age || !kind || !name || Number.isNaN(age)) {
-    //              console.log('Error: Input missing information');
-    //              return res.status(400).send('Error: Input missing information');
-    //         }
-    //         let allPets = JSON.parse(data);
-    //         let newPet = {age, kind, name};
-    //         allPets.push(newPet);
-    //         fs.writeFile(petsPath, JSON.stringify(allPets), (err)=>{
-    //             if (err) {
-    //                 next(err);
-    //             } else {
-    //                 res.status(200)
-    //                 res.send(`New pet added: ${JSON.stringify(newPet)}`);
-    //             }
-    //         })
-    //     }        
-    // })   
+    } 
 })
 
-// app.use((err,req,res,next)=>{                            ***Code from when the DB was in a JSON file***
-//     console.log('POST error sent to middleware')
-//     return res.status(500).send('Internal Error');
-// })
-
-// If PATCH request to pets/#, takes in the body and checks against
+// If PATCH request to pets/#, takes in the body and checks against the DB to see if exists and then updates the given fields
 app.patch('/pets/:id', (req,res, next)=>{
     console.log(req.method);
     const id = parseInt(req.params.id);
     const { name, kind, age } = req.body;
     let petAge = parseInt(age);
-    if (name){
-        pool.query('UPDATE pets SET name = $1 WHERE id = $2;', [name, id], (err, result)=>{
-            console.log('Pet updated');
-        });
-    };
-    if (kind){
-        pool.query('UPDATE pets SET kind = $1 WHERE id = $2;', [kind, id], (err, result)=>{
-
-        });
-    };
-    if (age && !Number.isNaN(petAge)){
-        pool.query('UPDATE pets SET age = $1 WHERE id = $2;', [age, id], (err, result)=>{
-
-        });
-    };
-    
-
-    // fs.readFile(petsPath, (err,data)=>{                  ***Code from when the DB was in a JSON file***    
-    //     let allPets = JSON.parse(data);
-    //     if (err || !allPets[petId] || Number.isNaN(parseInt(body.age))) {
-    //         console.log('PATCH error')
-    //         return res.status(400).send('Improper input from user');
-    //     }
-    //     if (body.hasOwnProperty('age' && !Number.isNaN(parseInt(body.age)))) {
-    //         allPets[petId].age = body.age;
-    //     }
-    //     if (body.hasOwnProperty('kind')) {
-    //         allPets[petId].kind = body.kind;
-    //     }
-    //     if (body.hasOwnProperty('name')) {
-    //         allPets[petId].name = body.name;
-    //     }
-    //     fs.writeFile(petsPath, JSON.stringify(allPets), (err)=>{
-    //         if (err) {
-    //             next(err);
-    //         } else {
-    //             res.status(200)
-    //             res.send(`Updated pet info`);
-    //         }
-    //      })        
-    // })   
+    // checks if path is a number
+    if (Number.isNaN(id)){
+        console.log('Not Found')
+        return res.status(404).send('Error Not Found');
+    }
+    // checks if the pet exists in the DB
+    pool.query('SELECT * FROM pets WHERE id = $1', [id], (err, result)=>{
+        let info = result.rows[0];
+        if (err){
+            next(err);
+        }
+        if (Number.isNaN(petAge)){
+            console.log('Incorrect input from user');
+            return res.status(400).send('Incorrect input from user. Age must be an integer.')
+        }
+        if (info){
+            if (name){
+                pool.query('UPDATE pets SET name = $1 WHERE id = $2;', [name, id], (err, result)=>{
+                    console.log(`Pet updated: ${name}`);
+                });
+            }
+            if (kind){
+                pool.query('UPDATE pets SET kind = $1 WHERE id = $2;', [kind, id], (err, result)=>{
+                    console.log(`Pet updated: ${kind}`);
+                });
+            }
+            if (age){
+                pool.query('UPDATE pets SET age = $1 WHERE id = $2;', [age, id], (err, result)=>{
+                    console.log(`Pet updated: ${age}`);
+                });
+            }
+            return res.status(200).send('Pet updated');
+        } else {
+            return res.status(404).send('Pet not found');
+        }
+    });  
 })
-
-// app.use((err,req,res,next)=>{                            ***Code from when the DB was in a JSON file***
-//     console.log('PATCH error sent to middleware')
-//     console.error(err.stack);
-//     res.status(500).send('Internal Error');
-// })
 
 app.delete('/pets/:id', (req, res, next)=>{
     console.log(req.method);
     const id = parseInt(req.params.id);
+    // checks if the path is a number
     if (Number.isNaN(id)) {
         console.log('Error Not Found');
         return res.status(404).send('Error Not Found');
@@ -189,6 +128,7 @@ app.delete('/pets/:id', (req, res, next)=>{
                 return next(err);
             }
             let delPet = result.rows[0];
+            // checks if pet is in the database
             if (delPet){
                 console.log(delPet);
                 res.status(200).send(delPet);
