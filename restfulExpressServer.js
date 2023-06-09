@@ -19,6 +19,7 @@ petShopApp.get('/:id', (req, res) => {
     }
 })
 
+
 petShopApp.get('/pets/:id', (req, res) => {
     fs.readFile(petsPath, (err, data) => {
         const id = req.params.id
