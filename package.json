@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gSchool/fs-pet-shop.git"
+    "url": "git+https://github.com/BenjaminSchenk/fs-pet-shop.git"
   },
   "keywords": [
     "pet",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/gSchool/fs-pet-shop#readme",
   "dependencies": {
+    "express": "^4.18.2",
     "nodemon": "^1.9.1"
   }
 }
