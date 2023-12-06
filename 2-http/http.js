@@ -12,6 +12,7 @@ const server = http.createServer((req, res) => {
   if (method === "GET" && url === "/pets") {
     fs.readFile("../pets.json", "utf-8", (err, text) => {
       if (err) {
+        console.error(err);
         res.statusCode = 500;
         res.end();
         return;
@@ -23,6 +24,7 @@ const server = http.createServer((req, res) => {
   } else if (method === "GET" && url.match(singlePetRegExp)) {
     fs.readFile("../pets.json", "utf-8", (err, text) => {
       if (err) {
+        console.error(err);
         res.statusCode = 500;
         res.end();
         return;
