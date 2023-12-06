@@ -5,28 +5,13 @@ let client = new pg.Client({
   database: "petshop",
 });
 
-try {
-  await client.connect();
-} catch (err) {
-  console.error(err);
-}
+await client.connect();
 
-const port = 8001;
+const PORT = 8001;
 
 const app = express();
 
-// Enable middleware for receiving JSON request body
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Goodbye");
-});
-
-// Logging middleware
-app.use((req, res, next) => {
-  console.log("Request received", req.method, req.url);
-  next();
-});
 
 app.get("/pets", (_, res, next) => {
   client
@@ -51,37 +36,30 @@ app.get("/pets/:id", (req, res, next) => {
     .catch(next);
 });
 
-// endpoint to create a new pet
 app.post("/pets", (req, res, next) => {
-  // console.log("req.body", req.body);
-  const age = Number.parseInt(req.body.age); // make sure its a number
+  const age = Number.parseInt(req.body.age);
   const { kind, name } = req.body;
-  // validate data from request body
+
   if (!kind || !name || Number.isNaN(age)) {
     return res.sendStatus(400);
   }
-  // create a new pet object
-  const newPet = { age, name, kind };
-  // insert new row to pets table in DB
+
   client
     .query(
       `INSERT INTO pets (name, kind, age) VALUES ($1, $2, $3) RETURNING *`,
       [name, kind, age]
     )
     .then((data) => {
-      console.log(data.rows);
       res.send(data.rows[0]);
     })
     .catch(next);
 });
 
-// endpoint to update a pet
 app.patch("/pets/:id", (req, res, next) => {
-  const petId = Number.parseInt(req.params.id) || null;
-  const age = Number.parseInt(req.body.age); // make sure its a number
+  const petId = Number(req.params.id) || null;
+  const age = Number(req.body.age);
   const { kind, name } = req.body;
 
-  // execute UPDATE SQL
   client
     .query(
       `UPDATE pets SET
@@ -95,7 +73,6 @@ app.patch("/pets/:id", (req, res, next) => {
       if (data.rows.length == 0) {
         res.sendStatus(404);
       }
-      console.log("updated pet: ", data.rows[0]);
       res.send(data.rows[0]);
     })
     .catch(next);
@@ -127,6 +104,6 @@ app.use((_, res) => {
   res.sendStatus(404);
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
