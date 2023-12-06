@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 const command = process.argv[2];
 
