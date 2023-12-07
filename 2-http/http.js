@@ -4,19 +4,18 @@ const fs = require("fs");
 const port = process.env.PORT || 8001;
 
 
-
 var requestHandler = (req, res) => {
     var url = req.url;
     const petRegExp = /^\/pets\/(.*)$/;
-    //console.log(petRegExp)
-    //console.log(petRegExp.test(url))
-    //console.log(url.match(petRegExp))
-    console.log(petRegExp.test(url))
+    
     if(req.method === 'GET' && petRegExp.test(url)) {
-        //console.log(url.match(petRegExp))
-        //console.log(url.match(petRegExp)[1])
+        
         fs.readFile('../pets.json', (err, data) => {
-            if (err) throw err;
+            if (err) {
+                res.setHeader('Content-Type', 'text/plain');
+                res.statusCode = 404;
+                res.end(JSON.stringify(err));
+            }
 
             var petIndex = url.match(petRegExp)[1];
             var dataObj = JSON.parse(data);
@@ -35,13 +34,16 @@ var requestHandler = (req, res) => {
                 res.end(JSON.stringify(dataObj[petIndex]));
             }
         })
+
     } else {
         res.setHeader('Content-Type', 'text/plain');
         res.statusCode = 404;
         res.end('Not found');
     }
 
+
 };
+
 
 var server = http.createServer(requestHandler)
 
